@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('po', 'PoController');
+Route::resource('wo', 'WoController');
+Route::get('/wo/filter/{filter}', 'WoController@filter');
+Route::resource('production', 'ProductionController');
+Route::resource('users', 'UserController');
+Route::resource('delivery', 'DeliveryController');
+Route::resource('locations', 'LocationController');
+Route::resource('transaction', 'TransactionController');
+
+Route::post('delivery/firma/{id}', 'DeliveryController@saveFirma')->name('delivery');
+
+Route::get('production/getdetail/{id}', 'ProductionController@getdetail')->name('getdetail');
+
+Route::get('locations/getByWarehouse/{warehouse}', 'LocationController@getByWarehouse')->name('getByWarehouse');

@@ -17,24 +17,37 @@ import Vue from "vue";
 window.Vue = Vue;
 
 
-//window.Swal = require('sweetalert2');
+window.Swal = require('sweetalert2');
 window.moment = (require("moment"));
+import MainMixin from './components/mixins/main.js';
 import 'vue-select/dist/vue-select.css';
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import es from 'vee-validate/dist/locale/es';
-import Multiselect from 'vue-multiselect';
-import VeeValidate, { Validator } from 'vee-validate';
-import VRuntimeTemplate from "v-runtime-template";
-import vSelect from 'vue-select';
-import Datepicker from 'vuejs-datepicker';
-import { esp } from 'vuejs-datepicker/dist/locale';
-//var DatatableFactory  = require('vuejs-datatable');
-//import { VuejsDatatableFactory } from 'vuejs-datatable';
 
+
+import VRuntimeTemplate from "v-runtime-template";
+// import vSelect from 'vue-select';
+
+import { esp } from 'vuejs-datepicker/dist/locale';
+
+
+// Vue Moment
+import VueMoment from 'vue-moment';
+Vue.use(VueMoment);
+
+/// VEEVALIDATE
+import VeeValidate, { Validator } from 'vee-validate';
 Validator.localize({ es: es });
 Vue.use(VeeValidate, {locale: 'es'});
+Vue.mixin(MainMixin);
+
+/// MULTISELECT
+import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
-Vue.component('v-select', vSelect);
+// Vue.component('v-select', vSelect);
+
+/// DATEPICKET
+import Datepicker from 'vuejs-datepicker';
 Vue.component('datepicker', Datepicker);
 
 /**
@@ -51,11 +64,19 @@ Vue.component('datepicker', Datepicker);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('main-component', require('./components/layouts/main.vue').default);
 Vue.component('footer-component', require('./components/layouts/footer.vue').default);
+
 // Vue.component('content-component', require('./components/layouts/content.vue').default);
 
 // Orden de Compra
-Vue.component('index-oc-component', require('./components/oc/index.vue').default);
-Vue.component('create-oc-component', require('./components/oc/create.vue').default);
+Vue.component('index-wo-component', require('./components/wo/index.vue').default);
+Vue.component('create-wo-component', require('./components/wo/create.vue').default);
+Vue.component('delivery-wo-component', require('./components/wo/delivery.vue').default);
+Vue.component('detail-wo-component', require('./components/wo/detail.vue').default);
+
+/// ALMACEN
+Vue.component('locations-index', require('./components/whs/locations.vue').default);
+Vue.component('transactions-index', require('./components/whs/transactions.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

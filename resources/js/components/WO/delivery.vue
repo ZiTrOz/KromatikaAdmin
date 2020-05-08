@@ -8,8 +8,8 @@
                             <h6 class="h2 text-white d-inline-block mb-0">{{ title }}</h6>
                         </div>
                         <div class="col-lg-6 col-5 text-right">
-                            <button class="btn btn btn-success" @click="save()">Guardar</button>
-                            <button class="btn btn btn-info">Cancelar</button>
+                            <button class="btn btn btn-success" @click="save()">Confirmar Entrega</button>
+                            <button class="btn btn btn-info" @click="cancel()">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -43,32 +43,27 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="ponumber">Orden de Compra:</label>
-                                <input type="text" class="form-control" id="ponumber" v-model="po.ponumber" placeholder="" v-validate="'required'" data-vv-as="Orden de Compra" name="ponumber" 
-                                    :class="{ 'is-invalid': submitted && errors.has('ponumber') }" />
-                                <div v-if="submitted && errors.has('ponumber')" class="invalid-feedback">
-                                    {{ errors.first("ponumber") }}
-                                </div>
+                                <input type="text" class="form-control form-control-sm" id="ponumber" v-model="po.ponumber" readonly />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="folio">Folio:</label>
-                                <input type="text" class="form-control" id="folio" v-model="po.folio" placeholder="" v-validate="'required'" data-vv-as="Folio" name="folio" 
-                                    :class="{ 'is-invalid': submitted && errors.has('folio') }" />
-                                <div v-if="submitted && errors.has('folio')" class="invalid-feedback">
-                                    {{ errors.first("folio") }}
-                                </div>
+                                <input type="text" class="form-control form-control-sm" id="folio" v-model="po.folio" readonly/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="form-control-label" for="date">Fecha:</label>
+                                <label class="form-control-label" for="delivery_date">Fecha de Entrega:</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                     </div>
-                                    <!-- <datepicker v-model="po.date" format="dd/MM/yyyy" input-class="form-control" calendar-class="datepicker"></datepicker> -->
-                                    <input class="form-control datepicker" placeholder="Select date" v-model="po.date" type="text">
+                                    <input class="form-control datepicker" placeholder="Seleccione la fecha" v-model="po.delivery_date" type="text" v-validate="'required'" data-vv-as="Fecha de Entrega" 
+                                        name="delivery_date" :class="{ 'is-invalid': submitted && errors.has('delivery_date') }" >
+                                    <div v-if="submitted && errors.has('delivery_date')" class="invalid-feedback">
+                                        {{ errors.first("delivery_date") }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -77,21 +72,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="client">Cliente:</label>
-                                <input type="text" class="form-control" id="client" v-model="po.customer" placeholder="" v-validate="'required'" data-vv-as="Cliente" name="customer" 
-                                    :class="{ 'is-invalid': submitted && errors.has('customer') }" />
-                                <div v-if="submitted && errors.has('customer')" class="invalid-feedback">
-                                    {{ errors.first("customer") }}
-                                </div>
+                                <input type="text" class="form-control form-control-sm" id="client" v-model="po.customer" readonly/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="phone">Tel:</label>
-                                <input type="text" class="form-control" id="phone" v-model="po.phone" placeholder="" v-validate="'required'" data-vv-as="Teléfono" name="phone" 
-                                    :class="{ 'is-invalid': submitted && errors.has('phone') }" />
-                                <div v-if="submitted && errors.has('phone')" class="invalid-feedback">
-                                    {{ errors.first("phone") }}
-                                </div>
+                                <input type="text" class="form-control form-control-sm" id="phone" v-model="po.phone" readonly />                               
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -104,11 +91,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row align-items-center">
-                        <div class="col-lg-12 col-12 text-right">
-                            <button href="#" class="btn btn-sm btn-neutral" @click="addRow()">Nuevo Producto</button>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="table-responsive py-4" >
                             <table class="table table-flush needs-validation" id="datatable-basic">
@@ -117,33 +99,19 @@
                                         <th class="text-center">Cantidad</th>
                                         <th class="text-center">Descripción</th>
                                         <th class="text-center">Precio</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="text-center">
                                     <tr v-for="(prod, index) in po.podetail" v-bind:key="index">
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Cantidad" v-model="prod.quantity" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Cantidad" :id="'qty' + index" :name="'qty' + index" 
-                                                :class="{ 'is-invalid': submitted && errors.has('qty' + index) }" />
-                                            <div v-if="submitted && errors.has('qty' + index)" class="invalid-feedback">
-                                                {{ errors.first("qty" + index) }}
-                                            </div>
+                                            <label class="form-control-label">{{ prod.quantity }}</label>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Descripción" v-model="prod.description" v-validate="'required'" data-vv-as="Descripción" :id="'desc' + index" :name="'desc' + index" 
-                                                :class="{ 'is-invalid': submitted && errors.has('desc' + index) }" />
-                                            <div v-if="submitted && errors.has('desc' + index)" class="invalid-feedback">
-                                                {{ errors.first("desc" + index) }}
-                                            </div>
+                                            <label class="form-control-label">{{ prod.description }}</label>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Precio" v-model="prod.price" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Precio" :id="'price' + index" :name="'price' + index" 
-                                                :class="{ 'is-invalid': submitted && errors.has('price' + index) }" />
-                                            <div v-if="submitted && errors.has('price' + index)" class="invalid-feedback">
-                                                {{ errors.first("price" + index) }}
-                                            </div>
+                                            <label class="form-control-label">{{ prod.price }}</label>
                                         </td>
-                                        <td style="vertical-align: middle;"><a href="#" class="btn btn-sm btn-danger" @click="deleteRow(index)">Quitar</a></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -154,25 +122,25 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="advance">Anticipo:</label>
-                                <input type="text" class="form-control" id="advance" v-model="po.advance" @change="updateSubtotal()">
+                                <input type="text" class="form-control form-control-sm" id="advance" v-model="po.advance" readonly>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="toPay">Por Pagar:</label>
-                                <input type="text" class="form-control" id="toPay" v-model="po.toPay" readonly>
+                                <input type="text" class="form-control form-control-sm" id="toPay" v-model="po.toPay" readonly>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="subtotal">Subtotal:</label>
-                                <input type="text" class="form-control" id="subtotal" v-model="po.subtotal" readonly>
+                                <input type="text" class="form-control form-control-sm" id="subtotal" v-model="po.subtotal" readonly>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="iva">I.V.A.:</label>
-                                <input type="text" class="form-control" id="iva" v-model="po.iva" readonly>
+                                <input type="text" class="form-control form-control-sm" id="iva" v-model="po.iva" readonly>
                             </div>
                         </div>
                     </div>
@@ -180,7 +148,7 @@
                         <div class="offset-9 col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="total">Total:</label>
-                                <input type="text" class="form-control" id="total" v-model="po.total" readonly>
+                                <input type="text" class="form-control form-control-sm" id="total" v-model="po.total" readonly>
                             </div>
                         </div>
                     </div>
@@ -212,32 +180,22 @@
 					phone: '',
                     delivery: 'Mostrador',
                     podetail: [],
+                    delivey_date: '',
                     errors: []
-				},    			
-    			quantity: '',
-    			description: '',
-    			price: '',
+				},    
                 submitted: false,
-                message: "",
+                message: ''
     		}
     	},
-    	methods: {
-    		addRow(){
-    			var row = {
-    				quantity: '',
-    				description: '',
-    				price: ''
-    			};
-    			this.po.podetail.push(row);
-    		},
-    		deleteRow(index) {
-				this.po.podetail.splice(index,1);
-				this.updateSubtotal();
-            },
+    	methods: {    
+            cancel(){
+                window.location.href = "/oc";
+            },	
             getPo(id){
                 axios.get('/api/po/' + id)
                     .then(response => {
                         this.po = response.data;
+                        this.po.delivery_date = moment().format('DD/MM/YYYY');
                         this.po.errors = [];
                     })
             },
@@ -252,21 +210,22 @@
                             this.po.errors = "No se agregaron productos";
                             return;
                         }
-                        //$("#content").loading();
+                        this.showLoading();
     					this.po.errors = [];
-						this.message = "";
-						axios.post('/api/po', this.po)
+                        this.message = "";
+                        this.po.delivery_date = moment(this.delivery_date);
+						axios.post('/po/delivery/' + this.po.id, this.po)
 						.then(response => {
 							this.po = {
                                 errors: [],
                                 podetail: []
 							}
                             this.submitted = false;
-                            window.location.href = "/oc/editar";
-                            //$("#content").loading('stop');
+                            window.location.href = "/oc";
+                            this.stopLoading();
 						}).catch(errors => {
+                            this.stopLoading();
                             this.submitted = false;
-                            //$("#content").loading('stop');
                              if(typeof errors.response.data === 'object')
                                 if(errors.response.data.errors != undefined)
                                     this.po.errors = _.flatten(_.toArray(errors.response.data.errors))
@@ -278,31 +237,16 @@
     				}
     			});
 			},
-			updateSubtotal(){
-				let subtotal = 0;
-				this.po.podetail.forEach(function(item) {
-					if(!isNaN(parseFloat(item.price)) && isFinite(item.price) && !isNaN(parseFloat(item.quantity)) && isFinite(item.quantity)){
-						subtotal += (parseFloat(item.price) * parseFloat(item.quantity));
-					}
-				});
-				this.po.subtotal = (subtotal).toFixed(2);
-				this.po.iva = (subtotal * 1.16 - subtotal).toFixed(2)
-				this.po.total = (subtotal * 1.16).toFixed(2);
-				if(!isNaN(parseFloat(this.po.advance)) && isFinite(this.po.advance)){
-					this.po.toPay = ((subtotal * 1.16) - this.po.advance).toFixed(2);
-				}
-			}
     	},
     	mounted(){
             if(this.id > 0){
                 this.getPo(this.id);
-            }
-			this.addRow();            
+            }   
             $('.datepicker').datepicker({
                 format: 'dd/mm/yyyy',
                 autoclose: true,
-            });
-            this.po.date = moment().format('DD/MM/YYYY');
+            }); 
+            this.po.delivery_date = moment().format('DD/MM/YYYY');
 		},
     }
 </script>

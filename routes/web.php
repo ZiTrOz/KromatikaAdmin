@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,13 +13,22 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('main')->with(['component' => 'main', 'title' => '', 'id' => 0]);
 });
 
-Route::get('/oc/crear', function () { return view('main')->with(['component' => 'create-oc', 'title' => 'Crear Orden de Compra', 'id' => 0]); });
-Route::get('/oc/editar/{id}', function ($id) { return view('main')->with(['component' => 'edit-oc', 'title' => 'Editar Orden de Compra', 'id' => $id]); });
-Route::get('/oc', function () { return view('main')->with(['component' => 'index-oc', 'title' => 'Ordenes de Compra', 'id' => 0]); });
+Route::get('/ordentrabajo/crear', function () { return view('main')->with(['component' => 'create-wo', 'title' => 'Crear Orden de Compra', 'id' => 0]); });
+Route::get('/ordentrabajo/editar/{id}', function ($id) { return view('main')->with(['component' => 'edit-wo', 'title' => 'Editar Orden de Compra', 'id' => $id]); });
+Route::get('/ordentrabajo', function () { return view('main')->with(['component' => 'index-wo', 'title' => 'Ordenes de Compra', 'id' => 0]); });
+Route::get('/ordentrabajo/entrega/{id}', function ($id) { return view('main')->with(['component' => 'delivery-wo', 'title' => 'Entrega de Pedido', 'id' => $id]); });
+Route::get('/ordentrabajo/detalle/{id}', function ($id) { return view('main')->with(['component' => 'detail-wo', 'title' => 'Detalle de la Orden de Compra', 'id' => $id]); });
+Route::post('/po/delivery/{id}', 'WoController@delivery');
+Route::get('/po/search/{term}', 'WoController@search');
+
+Route::get('/almacen', function () { return view('main')->with(['component' => 'warehouse-index', 'title' => 'Almacen', 'id' => 0]); });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/almacen/ubicaciones', function () { return view('main')->with(['component' => 'locations-index', 'title' => 'Ubicaciones', 'id' => 0]); });
+Route::get('/almacen/transacciones', function () { return view('main')->with(['component' => 'transactions-index', 'title' => 'Transacciones', 'id' => 0]); });

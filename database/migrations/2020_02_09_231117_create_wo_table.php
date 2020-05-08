@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePoTable extends Migration
+class CreateWoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreatePoTable extends Migration
      */
     public function up()
     {
-        Schema::create('po', function (Blueprint $table) {
+        Schema::create('wo', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('ponumber');
+            $table->string('wonumber');
             $table->string('folio');
             $table->string('date');
             $table->string('customer');
@@ -26,6 +26,9 @@ class CreatePoTable extends Migration
             $table->float('subtotal');
             $table->float('iva');
             $table->float('total');
+            $table->string('status');
+            $table->date('delivery_date');
+            $table->string('machine');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -38,6 +41,6 @@ class CreatePoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('po');
+        Schema::dropIfExists('wo');
     }
 }

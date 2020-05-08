@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePodetailTable extends Migration
+class CreateProductionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,16 @@ class CreatePodetailTable extends Migration
      */
     public function up()
     {
-        Schema::create('podetail', function (Blueprint $table) {
+        Schema::create('production', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('po_id');
-            $table->integer('quantity');
-            $table->string('description');
-            $table->float('price');
+            $table->bigInteger('wo_id');
+            $table->bigInteger('wodetail_id');
+            $table->bigInteger('user_id');
+            $table->text('notes')->nullable();
+            $table->date('date');
+            $table->string('machine');
+            $table->string('process');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -31,6 +33,6 @@ class CreatePodetailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('podetail');
+        Schema::dropIfExists('production');
     }
 }
