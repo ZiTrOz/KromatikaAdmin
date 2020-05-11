@@ -32,3 +32,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/almacen/ubicaciones', function () { return view('main')->with(['component' => 'locations-index', 'title' => 'Ubicaciones', 'id' => 0]); });
 Route::get('/almacen/transacciones', function () { return view('main')->with(['component' => 'transactions-index', 'title' => 'Transacciones', 'id' => 0]); });
+Route::get('/almacen/inventario', function () { return view('main')->with(['component' => 'inventory-index', 'title' => 'Inventario', 'id' => 0]); });

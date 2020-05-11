@@ -8,6 +8,7 @@
 
   <locations-index v-if="component == 'locations-index'" :title="title" :id="id" ></locations-index>
   <transactions-index v-if="component == 'transactions-index'" :title="title" :id="id" ></transactions-index>
+  <inventory-index v-if="component == 'inventory-index'" :title="title" :id="id" ></inventory-index>
 </div>
 </template>
 <script>

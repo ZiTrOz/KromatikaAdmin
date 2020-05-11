@@ -78,6 +78,12 @@
               <div class="collapse" id="navbar-warehouse">
                 <ul class="nav nav-sm flex-column">
                   <li class="nav-item">
+                    <a href="/almacen/inventario" class="nav-link">
+                      <span class="sidenav-mini-icon"> INV </span>
+                      <span class="sidenav-normal"> Inventario </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
                     <a href="/almacen/ubicaciones" class="nav-link">
                       <span class="sidenav-mini-icon"> UBI </span>
                       <span class="sidenav-normal"> Ubicaciones </span>

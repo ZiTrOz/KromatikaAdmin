@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -42,13 +43,43 @@ class TransactionController extends Controller
 
         Validator::make($data, Transaction::getRules($data['warehouse'], $data['movement']))->validate();
 
-        
         DB::beginTransaction();
         try{
             $data['to'] = $data['to']['id'];
             if($data['movement'] == "Interno")
                 $data['from'] = $data['from']['id'];
-            Transaction::create($data);
+            $transaction = Transaction::create($data);
+
+            switch($transaction->movement){
+                case 'Entrada':
+                    $item = Inventory::where('item', $transaction->item)->where('code', $transaction->code)->where('location_id', $transaction->to)->first();
+                    if($item != null){
+                        $item->quantity += $transaction->quantity;
+                        $item->save();
+                    }
+                    else{
+                        $data['location_id'] = $transaction->to;
+                        Validator::make($data, Inventory::getRules())->validate();
+                        Inventory::create($data);
+                    }
+                break;
+
+                case 'Salida':
+                    $item = Inventory::where('item', $transaction->item)->where('code', $transaction->code)->where('location_id', $transaction->to)->first();
+                    if($item == null){
+                        $item->quantity -= $transaction->quantity;
+                        $item->save();
+                    }
+                break;
+
+                case 'Interno':
+                    $item = Inventory::where('item', $transaction->item)->where('code', $transaction->code)->where('location_id', $transaction->to)->first();
+                    if($item == null){
+                        $item->quantity += $transaction->quantity;
+                        $item->save();
+                    }
+                break;
+            }
 
             DB::commit();
             $transactions = Transaction::getTransactions();

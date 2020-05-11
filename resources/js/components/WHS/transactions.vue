@@ -19,7 +19,7 @@
         <div class="card mb-4">
             <!-- Card header -->
             <div class="card-header">
-                <h3 class="mb-0">Información de la Orden de Compra</h3>
+                <h3 class="mb-0">Movimientos</h3>
             </div>
             <!-- Card body -->
             <div class="card-body">
@@ -214,6 +214,8 @@ export default {
     methods:{
         changeLocations(){
             this.options = this.locations.filter(l => l.warehouse == this.transaction.warehouse);
+            this.transaction.to = this.options[0];
+            this.transaction.from = '';
         },
         filterTransactions(){
             this.whsMovements = this.transactions.filter(t => t.to.warehouse == this.warehouse && t.movement == this.movement);
@@ -264,9 +266,21 @@ export default {
         saveMov(scope) {
             this.submitted = true;
             if(isNaN(parseFloat(this.transaction.quantity)) && !isFinite(this.transaction.quantity)){
-                    this.ShowMessagePopup('Ingrese una cantidad valida', 1)
+                this.ShowMessagePopup('Ingrese una cantidad valida', 1)
+                return;
+            }
+            if(this.transaction.to === null || this.transaction.to === undefined){
+                this.ShowMessagePopup('Ingrese la ubicación', 1)
+                return;
+            }
+
+            if(this.transaction.movement === 'Interno'){
+                if(this.transaction.from === null || this.transaction.from === undefined){
+                    this.ShowMessagePopup('Ingrese la ubicación', 1)
                     return;
                 }
+            }
+
             this.$validator.validateAll(scope).then(valid => { 
                 if (valid) {                        
                     this.showLoading();
@@ -280,6 +294,8 @@ export default {
                         // $('#transactionModal').modal('hide')
                         this.submitted = false;
                         this.transactions = response.data;
+                        this.filterTransactions();
+                        console.log(this.whsMovements);
                         this.stopLoading();
                     }).catch(errors => {
                         this.submitted = false;

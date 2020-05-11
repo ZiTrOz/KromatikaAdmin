@@ -76,6 +76,7 @@ Vue.component('detail-wo-component', require('./components/wo/detail.vue').defau
 /// ALMACEN
 Vue.component('locations-index', require('./components/whs/locations.vue').default);
 Vue.component('transactions-index', require('./components/whs/transactions.vue').default);
+Vue.component('inventory-index', require('./components/whs/inventory.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
