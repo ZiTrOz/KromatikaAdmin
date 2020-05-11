@@ -2406,6 +2406,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
@@ -2424,6 +2429,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       movements: ['Entrada', 'Salida', 'Interno'],
       locations: [],
       options: [],
+      whsMovements: [],
       submitted: false
     };
   },
@@ -2431,29 +2437,37 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     changeLocations: function changeLocations() {
       var _this = this;
 
-      console.log(this.transaction.warehouse);
       this.options = this.locations.filter(function (l) {
         return l.warehouse == _this.transaction.warehouse;
       });
     },
-    getTransactions: function getTransactions() {
+    filterTransactions: function filterTransactions() {
       var _this2 = this;
+
+      this.whsMovements = this.transactions.filter(function (t) {
+        return t.to.warehouse == _this2.warehouse && t.movement == _this2.movement;
+      });
+    },
+    getTransactions: function getTransactions() {
+      var _this3 = this;
 
       this.showLoading();
       axios.get('/api/transaction').then(function (response) {
-        _this2.transactions = response.data;
+        _this3.transactions = response.data;
+
+        _this3.filterTransactions();
       });
       this.stopLoading();
     },
     getLocations: function getLocations() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.showLoading();
       axios.get('/api/locations').then(function (response) {
-        _this3.locations = response.data;
+        _this4.locations = response.data;
 
-        if (_this3.locations.length > 0) {
-          _this3.changeLocations();
+        if (_this4.locations.length > 0) {
+          _this4.changeLocations();
         } // this.locations.errors = [];
 
       });
@@ -2481,7 +2495,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     },
     saveMov: function saveMov(scope) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.submitted = true;
 
@@ -2492,33 +2506,33 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       this.$validator.validateAll(scope).then(function (valid) {
         if (valid) {
-          _this4.showLoading();
+          _this5.showLoading();
 
-          _this4.transaction.errors = [];
-          _this4.message = "";
-          axios.post('/api/transaction', _this4.transaction).then(function (response) {
-            _this4.location = {
+          _this5.transaction.errors = [];
+          _this5.message = "";
+          axios.post('/api/transaction', _this5.transaction).then(function (response) {
+            _this5.location = {
               errors: []
             }; // $('#transactionModal').modal('hide')
 
-            _this4.submitted = false;
-            _this4.transactions = response.data;
+            _this5.submitted = false;
+            _this5.transactions = response.data;
 
-            _this4.stopLoading();
+            _this5.stopLoading();
           })["catch"](function (errors) {
-            _this4.submitted = false;
+            _this5.submitted = false;
 
-            _this4.stopLoading();
+            _this5.stopLoading();
 
             if (_typeof(errors.response.data) === 'object') {
-              if (errors.response.data.errors != undefined) _this4.transaction.errors = _.flatten(_.toArray(errors.response.data.errors));
-              if (errors.response.data.error != undefined) _this4.transaction.errors = [errors.response.data.error];else _this4.transaction.errors = ['Algo salio mal!'];
-            } else _this4.transaction.errors = ['Algo salio mal!'];
+              if (errors.response.data.errors != undefined) _this5.transaction.errors = _.flatten(_.toArray(errors.response.data.errors));
+              if (errors.response.data.error != undefined) _this5.transaction.errors = [errors.response.data.error];else _this5.transaction.errors = ['Algo salio mal!'];
+            } else _this5.transaction.errors = ['Algo salio mal!'];
           });
 
-          _this4.$forceUpdate();
+          _this5.$forceUpdate();
 
-          _this4.stopLoading();
+          _this5.stopLoading();
 
           $('#transactionModal').modal('hide');
         }
@@ -93763,6 +93777,11 @@ var render = function() {
                       "close-on-select": true,
                       "show-labels": false
                     },
+                    on: {
+                      close: function($event) {
+                        return _vm.filterTransactions()
+                      }
+                    },
                     model: {
                       value: _vm.warehouse,
                       callback: function($$v) {
@@ -93797,6 +93816,11 @@ var render = function() {
                       "close-on-select": true,
                       "show-labels": false
                     },
+                    on: {
+                      close: function($event) {
+                        return _vm.filterTransactions()
+                      }
+                    },
                     model: {
                       value: _vm.movement,
                       callback: function($$v) {
@@ -93820,63 +93844,29 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "tbody",
-                  _vm._l(_vm.transactions, function(t, i) {
-                    return _c("tr", { key: i }, [
-                      _c("td", [_vm._v(_vm._s(t.wonumber))]),
+                  _vm._l(_vm.whsMovements, function(t, i) {
+                    return _c("tr", { key: i, staticClass: "text-center" }, [
+                      _c("td", [_vm._v(_vm._s(t.to.warehouse))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(t.movement))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(t.code))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(t.item))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(t.quantity))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(t.to.location))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(t.user.name))]),
                       _vm._v(" "),
                       _c("td", [
                         _vm._v(
-                          _vm._s(
-                            _vm._f("moment")(_vm.wo.delivery_date, "DD/MM/YYYY")
-                          )
+                          _vm._s(_vm._f("moment")(t.created_at, "DD/MM/YYYY"))
                         )
                       ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.wo.total.toFixed(2)))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.wo.status))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("i", {
-                          staticClass: "fas fa-eye",
-                          attrs: { title: "Ver Detalle" },
-                          on: {
-                            click: function($event) {
-                              return _vm.viewDetail(_vm.wo)
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "fas fa-edit",
-                          attrs: { title: "Editar" },
-                          on: {
-                            click: function($event) {
-                              return _vm.editWo(_vm.wo)
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          class: {
-                            "fas fa-shipping-fast":
-                              _vm.wo.status === "Por Entregar"
-                          },
-                          attrs: { title: "Entregar" },
-                          on: {
-                            click: function($event) {
-                              return _vm.deliveryWo(_vm.wo)
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          class: {
-                            "fas fa-check": _vm.wo.status === "Entregado"
-                          },
-                          attrs: { title: "Entregado" }
-                        })
-                      ])
+                      _c("td")
                     ])
                   }),
                   0
@@ -94433,8 +94423,8 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.transaction.wo,
-                                  expression: "transaction.wo"
+                                  value: _vm.transaction.wonumber,
+                                  expression: "transaction.wonumber"
                                 },
                                 {
                                   name: "validate",
@@ -94457,7 +94447,7 @@ var render = function() {
                                 "data-vv-as": "Orden de Trabajo",
                                 name: "wonumber"
                               },
-                              domProps: { value: _vm.transaction.wo },
+                              domProps: { value: _vm.transaction.wonumber },
                               on: {
                                 input: function($event) {
                                   if ($event.target.composing) {
@@ -94465,7 +94455,7 @@ var render = function() {
                                   }
                                   _vm.$set(
                                     _vm.transaction,
-                                    "wo",
+                                    "wonumber",
                                     $event.target.value
                                   )
                                 }
@@ -94556,6 +94546,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Producto")]),
         _vm._v(" "),
         _c("th", [_vm._v("Cantidad")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Ubicación")]),
         _vm._v(" "),
         _c("th", [_vm._v("Usuario")]),
         _vm._v(" "),

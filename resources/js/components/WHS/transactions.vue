@@ -27,13 +27,13 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-control-label" for="date">Almacén:</label>
-                            <multiselect v-model="warehouse" :options="warehouses" :searchable="true" :close-on-select="true" :show-labels="false"></multiselect>
+                            <multiselect v-model="warehouse" :options="warehouses" @close="filterTransactions()" :searchable="true" :close-on-select="true" :show-labels="false"></multiselect>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-control-label" for="date">Movimiento:</label>
-                            <multiselect v-model="movement" :options="movements" :searchable="true" :close-on-select="true" :show-labels="false"></multiselect>
+                            <multiselect v-model="movement" :options="movements" @close="filterTransactions()" :searchable="true" :close-on-select="true" :show-labels="false"></multiselect>
                         </div>
                     </div>
                 </div>
@@ -46,23 +46,28 @@
                                 <th>Codigo</th>
                                 <th>Producto</th>
                                 <th>Cantidad</th>
+                                <th>Ubicación</th>
                                 <th>Usuario</th>
                                 <th>Fecha</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(t, i) in transactions" :key="i">
+                            <tr v-for="(t, i) in whsMovements" :key="i" class="text-center">
                                 
-                                <td>{{ t.wonumber }}</td>
-                                <td>{{ wo.delivery_date | moment("DD/MM/YYYY") }}</td>
-                                <td>{{ (wo.total).toFixed(2) }}</td>
-                                <td>{{ wo.status }}</td>
+                                <td>{{ t.to.warehouse }}</td>
+                                <td>{{ t.movement }}</td>
+                                <td>{{ t.code }}</td>
+                                <td>{{ t.item }}</td>
+                                <td>{{ t.quantity }}</td>
+                                <td>{{ t.to.location }}</td>
+                                <td>{{ t.user.name }}</td>
+                                <td>{{ t.created_at | moment("DD/MM/YYYY") }}</td>
                                 <td>
-                                    <i class="fas fa-eye" title="Ver Detalle" @click="viewDetail(wo)"></i>
+                                    <!-- <i class="fas fa-eye" title="Ver Detalle" @click="viewDetail(wo)"></i>
                                     <i class="fas fa-edit" title="Editar" @click="editWo(wo)"></i>
                                     <i :class="{'fas fa-shipping-fast' : wo.status === 'Por Entregar'}" title="Entregar" @click="deliveryWo(wo)"></i>
-                                    <i :class="{'fas fa-check' : wo.status === 'Entregado'}" title="Entregado"></i>
+                                    <i :class="{'fas fa-check' : wo.status === 'Entregado'}" title="Entregado"></i> -->
                                 </td>
                             </tr>
                         </tbody>
@@ -157,7 +162,7 @@
                         <div v-if="transaction.movement === 'Entrada' && (transaction.warehouse === 'Entrega' || transaction.warehouse === 'Proceso')" class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="wonumber">Orden de Trabajo:</label>
-                                <input class="form-control" id="wonumber" type="text" v-model="transaction.wo" placeholder="" v-validate="'required'" data-vv-scope="transaction" data-vv-as="Orden de Trabajo"
+                                <input class="form-control" id="wonumber" type="text" v-model="transaction.wonumber" placeholder="" v-validate="'required'" data-vv-scope="transaction" data-vv-as="Orden de Trabajo"
                                     name="wonumber" :class="{ 'is-invalid': submitted &amp;&amp; errors.has('transaction.wonumber') }" />
                                 <div class="invalid-feedback" v-if="submitted &amp;&amp; errors.has('transaction.wonumber')">{{ errors.first('transaction.wonumber') }}</div>
                             </div>                            
@@ -201,20 +206,25 @@ export default {
             ],
             locations: [],
             options: [],
+            whsMovements: [],
             submitted: false,
             
         }
     },
     methods:{
         changeLocations(){
-            console.log(this.transaction.warehouse)
             this.options = this.locations.filter(l => l.warehouse == this.transaction.warehouse);
+        },
+        filterTransactions(){
+            this.whsMovements = this.transactions.filter(t => t.to.warehouse == this.warehouse && t.movement == this.movement);
         },
         getTransactions(){
             this.showLoading();
             axios.get('/api/transaction')
                 .then(response => {
                     this.transactions = response.data;
+                    this.filterTransactions();
+                    
             })
             this.stopLoading();
         },

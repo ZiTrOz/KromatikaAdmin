@@ -16,7 +16,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        return Transaction::get();
+        return Transaction::getTransactions();
     }
 
     /**
@@ -39,6 +39,7 @@ class TransactionController extends Controller
     {
         $data = $request->all();
         $data['user_id'] = 1;
+
         Validator::make($data, Transaction::getRules($data['warehouse'], $data['movement']))->validate();
 
         
@@ -50,7 +51,7 @@ class TransactionController extends Controller
             Transaction::create($data);
 
             DB::commit();
-            $transactions = Transaction::get();
+            $transactions = Transaction::getTransactions();
 
             return response()->json($transactions, 200); 
         }

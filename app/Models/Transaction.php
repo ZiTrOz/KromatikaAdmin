@@ -30,12 +30,12 @@ class Transaction extends Model
         ];
         if($transaction == 'Entrada'){
             if($warehouse != 'Bodega'){
-                array_push($rules, ['wonumber' => 'required']);
+                $rules = $rules + array('wonumber' => 'required');
             }
         }
         
         if($transaction == 'Interno'){
-            array_push($rules, ['from' => 'required']);
+            $rules = $rules + array('from' => 'required');
         }
         return $rules;
     }
@@ -54,5 +54,9 @@ class Transaction extends Model
     }
     public function to(){
         return $this->belongsTo(\App\Models\Location::class, 'to');
+    }
+
+    public static function getTransactions(){
+       return Transaction::with('user', 'to', 'from')->get();
     }
 }
