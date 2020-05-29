@@ -158,6 +158,9 @@
   <script src="../../assets/vendor/js-cookie/js.cookie.js"></script>
   <script src="../../assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
   <script src="../../assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+
+  <script type="text/javascript" charset="utf8" src="../../assets/vendor/datatables.net/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="../../assets/vendor/datatables.net-bs4/dataTables.bootstrap4.js"></script>
   
   <!-- Argon JS -->
   <script src="../../assets/js/argon.min.js?v=1.2.0"></script>

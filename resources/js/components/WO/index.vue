@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="table-responsive py-4">                        
-                        <table class="table table-flush" id="wos">
+                        <table class="table table-flush table.align-items-center table-hover" id="wos">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Orden de Trabajo</th>
@@ -101,6 +101,7 @@
             },
             mytable(){
                 $(function() {
+                    $('#wos').DataTable().destroy();
                     $('#wos').DataTable({
                         "order": [[6, "asc"]],
                         searching: true,
@@ -116,7 +117,7 @@
                         "drawCallback": function( settings ) {
                             $('.pagination .previous .page-link').html('<i class="fas fa-angle-left"></i>');
                             $('.pagination .next .page-link').html('<i class="fas fa-angle-right"></i>'); 
-                        }   
+                        }  
                     });
                 });   
             },
@@ -124,7 +125,7 @@
                 axios.get('/api/wo/filter/' + this.woFilter).then(response=>{
                     //$('#wos').DataTable().destroy();
                     this.wos = response.data;
-                    this.mytable();
+                    // this.mytable();
                 });
             },
             newWo(){

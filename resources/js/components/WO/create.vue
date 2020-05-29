@@ -256,8 +256,9 @@
                     'Serigrafía'
                 ],
                 deliveries: [
-                    'Docmicilio',
+                    'Domicilio',
                     'Mostrador',
+                    'Instalación'
                 ]
     		}
     	},
