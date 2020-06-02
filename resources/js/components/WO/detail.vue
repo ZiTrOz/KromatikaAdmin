@@ -27,6 +27,7 @@
                                     <th>Cantidad</th>
                                     <th>Descrición</th>
                                     <th>Precio</th>
+                                    <th>Equipo</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -35,6 +36,7 @@
                                     <td>{{ d.quantity }}</td>
                                     <td>{{ d.description }}</td>
                                     <td>{{ d.price }}</td>
+                                    <td>{{ d.machine }}</td>
                                     <td>
                                         <i class="fas fa-eye" title="Ver Producción" @click="viewProd(d)"></i>
                                     </td>

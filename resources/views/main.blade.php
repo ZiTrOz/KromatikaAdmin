@@ -14,7 +14,11 @@
   <link rel="stylesheet" href="../../assets/vendor/%40fortawesome/fontawesome-free/css/all.min.css" type="text/css">
   <!-- Page plugins -->
   <!-- Argon CSS -->
+  <link rel="stylesheet" href="../../assets/vendor/datatables.net-bs4/dataTables.bootstrap4.css" type="text/css">
   <link rel="stylesheet" href="../../assets/css/argon.min.css" type="text/css">  
+
+  
+  {{-- <link rel="stylesheet" href="../../assets/vendor/select2/dist/css/select2.min.css" type="text/css"> --}}
   <style>
     .fas {
         cursor: pointer;
@@ -160,10 +164,10 @@
   <script src="../../assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
 
   <script type="text/javascript" charset="utf8" src="../../assets/vendor/datatables.net/jquery.dataTables.js"></script>
-	<script type="text/javascript" charset="utf8" src="../../assets/vendor/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+  <script type="text/javascript" charset="utf8" src="../../assets/vendor/datatables.net-bs4/dataTables.bootstrap4.js"></script>
   
   <!-- Argon JS -->
-  <script src="../../assets/js/argon.min.js?v=1.2.0"></script>
+  <script src="../../assets/js/argon.min.js?"></script>
   <script src="/js/app.js"></script>
   <script>
 		$(document).ready(function(){

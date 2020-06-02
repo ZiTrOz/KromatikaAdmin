@@ -31,7 +31,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive py-4">                        
+                    <div class="table-responsive py-4" v-cloak>                        
                         <table class="table table-flush table.align-items-center table-hover" id="wos">
                             <thead class="thead-light">
                                 <tr>
@@ -39,7 +39,7 @@
                                     <th>Folio</th>
                                     <th>Cliente</th>
                                     <th>Entrega</th>
-                                    <th>Equipo</th>
+                                    <!-- <th>Equipo</th> -->
                                     <th>Fecha de Entrega</th>
                                     <th>Total</th>
                                     <th>Estatus</th>
@@ -54,13 +54,13 @@
                                     <td>{{ wo.folio }}</td>
                                     <td>{{ wo.customer }}</td>
                                     <td>{{ wo.delivery }}</td>
-                                    <td>{{ wo.machine }}</td>
+                                    <!-- <td>{{ wo.machine }}</td> -->
                                     <td>{{ wo.delivery_date | moment("DD/MM/YYYY") }}</td>
                                     <td>{{ (wo.total).toFixed(2) }}</td>
                                     <td>{{ wo.status }}</td>
                                     <td>
                                         <i class="fas fa-eye" title="Ver Detalle" @click="viewDetail(wo)"></i>
-                                        <i class="fas fa-edit" title="Editar" @click="editWo(wo)"></i>
+                                        <i v-if="wo.status === 'Ingresada'" class="fas fa-edit" title="Editar" @click="editWo(wo)"></i>
                                         <i :class="{'fas fa-shipping-fast' : wo.status === 'Por Entregar'}" title="Entregar" @click="deliveryWo(wo)"></i>
                                         <i :class="{'fas fa-check' : wo.status === 'Entregado'}" title="Entregado"></i>
                                     </td>
@@ -86,7 +86,7 @@
                     'En proceso',
                     'Terminadas',
                 ],
-                woFilter: 'En proceso'
+                woFilter: 'En proceso',               
             }
         },
         methods:{
@@ -103,7 +103,7 @@
                 $(function() {
                     $('#wos').DataTable().destroy();
                     $('#wos').DataTable({
-                        "order": [[6, "asc"]],
+                        "order": [[5, "asc"]],
                         searching: true,
                         bLengthChange: false,
                         bFilter: true,
@@ -112,7 +112,7 @@
                         "language": {
                             "emptyTable": "No se encontraron registros",
                             "zeroRecords": "No se encontraron registros",
-                            "search": "Filtar:"
+                            "search": "Filtar: "
                         },     
                         "drawCallback": function( settings ) {
                             $('.pagination .previous .page-link').html('<i class="fas fa-angle-left"></i>');
@@ -123,9 +123,9 @@
             },
             getWos() {
                 axios.get('/api/wo/filter/' + this.woFilter).then(response=>{
-                    //$('#wos').DataTable().destroy();
-                    this.wos = response.data;
-                    // this.mytable();
+                    $('#wos').DataTable().destroy();
+                    this.wos = response.data;                    
+                    this.mytable();
                 });
             },
             newWo(){
@@ -153,4 +153,5 @@
     .prioridadmedia {
         background-color: yellow!important;
     }
+    [v-cloak] {display: none}
 </style>

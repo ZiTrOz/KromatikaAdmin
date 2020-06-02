@@ -32,3 +32,7 @@ Route::post('delivery/firma/{id}', 'DeliveryController@saveFirma')->name('delive
 Route::get('production/getdetail/{id}', 'ProductionController@getdetail')->name('getdetail');
 
 Route::get('locations/getByWarehouse/{warehouse}', 'LocationController@getByWarehouse')->name('getByWarehouse');
+
+Route::resource('polls', 'PollsController');
+
+Route::post('store-event', 'PollsController@storeEvent');

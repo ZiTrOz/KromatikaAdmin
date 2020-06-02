@@ -76,7 +76,6 @@ class WoController extends Controller
             'phone' => 'required',
             'delivery' => 'required',
             'delivery_date' => 'required',
-            'machine' => 'required',
         ])->validate();
 
         // if ($validator->fails()) {
@@ -90,6 +89,11 @@ class WoController extends Controller
             $data['status'] = "Ingresada";
             $data['delivery_date'] = Carbon::parse($data['delivery_date'])->format('y-m-d');
             // dd($data);
+            $data['toPay'] = doubleval($data['toPay']);
+            $data['advance'] = doubleval($data['advance']);
+            $data['subtotal'] = doubleval($data['subtotal']);
+            $data['iva'] = doubleval($data['iva']);
+            $data['total'] = doubleval($data['total']);
             $wo = Wo::create($data);
 
             foreach($woDetail as $prod){
@@ -97,7 +101,8 @@ class WoController extends Controller
                     'quantity' => $prod['quantity'],
                     'description' => $prod['description'],
                     'price'=> $prod['price'],
-                    'wo_id' => $wo->id
+                    'wo_id' => $wo->id,
+                    'machine' => $prod['machine']
                 ]);
             }
             DB::commit();

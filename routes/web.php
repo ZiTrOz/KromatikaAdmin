@@ -33,3 +33,20 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/almacen/ubicaciones', function () { return view('main')->with(['component' => 'locations-index', 'title' => 'Ubicaciones', 'id' => 0]); });
 Route::get('/almacen/transacciones', function () { return view('main')->with(['component' => 'transactions-index', 'title' => 'Transacciones', 'id' => 0]); });
 Route::get('/almacen/inventario', function () { return view('main')->with(['component' => 'inventory-index', 'title' => 'Inventario', 'id' => 0]); });
+
+Route::get('/polls', function () {
+    return view('welcome')
+        ->with('component', 'polls');
+});
+
+Route::get('/polls-answers/{poll_slug}', function ($poll_slug) {
+    return view('welcome')
+        ->with('slug', $poll_slug)
+        ->with('component', 'polls-answers');
+});
+
+Route::get('/encuesta/{id}', function ($id) {
+    return view('main')
+        ->with('component', 'poll-component')
+        ->with(['title' => '', 'id' => $id]);
+});

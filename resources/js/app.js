@@ -6,11 +6,11 @@
 window.$ = window.jQuery = require('jquery');
 window.axios = require('axios');
 require('./bootstrap');
-require( 'bootstrap-datepicker');
-require( 'datatables.net-bs4');
-require( 'datatables.net-buttons-bs4');
-require( 'datatables.net-select-bs4');
-require( 'jquery-loading');
+require('bootstrap-datepicker');
+require('datatables.net-bs4');
+// require('datatables.net-buttons-bs4');
+// require('datatables.net-select-bs4');
+require('jquery-loading');
 
 
 import Vue from "vue";
@@ -50,6 +50,8 @@ Vue.component('multiselect', Multiselect);
 import Datepicker from 'vuejs-datepicker';
 Vue.component('datepicker', Datepicker);
 
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -78,6 +80,9 @@ Vue.component('locations-index', require('./components/whs/locations.vue').defau
 Vue.component('transactions-index', require('./components/whs/transactions.vue').default);
 Vue.component('inventory-index', require('./components/whs/inventory.vue').default);
 
+//ENCUENTAS
+Vue.component('poll-component', require('./components/polls/poll.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -88,6 +93,8 @@ window.Fire = new Vue();
 window.csrf_token = $('meta[name="csrf-token"]').attr('content');
 window.VRuntimeTemplate = VRuntimeTemplate;
 
+import vmv from 'vuejs-model-validator';
+Vue.mixin(vmv);
 const app = new Vue({
     el: '#app',
 });

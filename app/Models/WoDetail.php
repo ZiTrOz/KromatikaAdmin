@@ -13,7 +13,8 @@ class WoDetail extends Model
         'wo_id',
         'quantity',
         'description',
-        'price'];
+        'price',
+        'machine'];
 
     public function production(){
         return $this->hasMany(\App\Models\Production::class);

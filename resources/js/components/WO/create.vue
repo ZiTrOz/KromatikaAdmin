@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="phone">Equipo:</label>
                                 <multiselect v-model="wo.machine" :options="machines" :searchable="true" :close-on-select="true" :show-labels="false" placeholder=""
@@ -92,9 +92,7 @@
                                     {{ errors.first("machine") }}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
+                        </div> -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="date">Entrega:</label>
@@ -104,10 +102,6 @@
                                 <div v-if="submitted && errors.has('delivery')" class="invalid-feedback">
                                     {{ errors.first("delivery") }}
                                 </div>
-                                <!-- <select class="form-control select2-hidden-accessible" data-toggle="select" v-model="wo.delivery" data-minimum-results-for-search="Infinity">
-                                    <option>Mostrador</option>
-                                    <option>Domicilio</option>
-                                </select> -->
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -115,39 +109,35 @@
                                 <label class="form-control-label" for="date">Fecha de Entrega:</label>
                                 <datepicker v-model="date" :bootstrap-styling="true" :format="format" v-validate="'required'" data-vv-as="Fecha" 
                                         name="date" :class="{ 'is-invalid': submitted && errors.has('date') }"></datepicker>                                
-                                <!-- <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
-                                    </div>
-                                    <input class="form-control datepicker" placeholder="Select date" v-model="wo.date" type="text" v-validate="'required'" data-vv-as="Fecha" 
-                                        name="date" :class="{ 'is-invalid': submitted && errors.has('date') }" >
-                                    <div v-if="submitted && errors.has('date')" class="invalid-feedback">
-                                        {{ errors.first("date") }}
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        
                     </div>
                     <div class="row align-items-center">
                         <div class="col-lg-12 col-12 text-right">
                             <button href="#" class="btn btn-sm btn-neutral" @click="addRow()">Nuevo Producto</button>
+                            
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
-                        <div class="table-responsive py-4" >
+                        <div class="" >
                             <table class="table table-flush needs-validation" id="datatable-basic">
                                 <thead class="thead-light">
                                     <tr>
                                         <th class="text-center">Cantidad</th>
                                         <th class="text-center">Descripción</th>
                                         <th class="text-center">Precio</th>
+                                        <th class="text-center">Equipo</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(prod, index) in wo.wodetail" v-bind:key="index">
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Cantidad" v-model="prod.quantity" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Cantidad" :id="'qty' + index" :name="'qty' + index" 
+                                            <input type="number" class="form-control" placeholder="Cantidad" v-model="prod.quantity" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Cantidad" :id="'qty' + index" :name="'qty' + index" 
                                                 :class="{ 'is-invalid': submitted && errors.has('qty' + index) }" />
                                             <div v-if="submitted && errors.has('qty' + index)" class="invalid-feedback">
                                                 {{ errors.first("qty" + index) }}
@@ -161,13 +151,23 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Precio" v-model="prod.price" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Precio" :id="'price' + index" :name="'price' + index" 
+                                            <input type="number" class="form-control" placeholder="Precio" v-model="prod.price" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Precio" :id="'price' + index" :name="'price' + index" 
                                                 :class="{ 'is-invalid': submitted && errors.has('price' + index) }" />
                                             <div v-if="submitted && errors.has('price' + index)" class="invalid-feedback">
                                                 {{ errors.first("price" + index) }}
                                             </div>
                                         </td>
-                                        <td style="vertical-align: middle;"><a href="#" class="btn btn-sm btn-danger" @click="deleteRow(index)">Quitar</a></td>
+                                        <td>
+                                            <multiselect style="width: 90%" v-model="prod.machine" :options="machines" :searchable="true" :close-on-select="true" :show-labels="false" placeholder=""
+                                                v-validate="'required'" data-vv-as="Equipo" name="machine" 
+                                                    :class="{ 'is-invalid': submitted && errors.has('machine') }"></multiselect>
+                                            <div v-if="submitted && errors.has('machine')" class="invalid-feedback">
+                                                {{ errors.first("machine") }}
+                                            </div>
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <a href="#" class="btn btn-sm btn-danger" @click="deleteRow(index)">Quitar</a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -178,7 +178,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="advance">Anticipo:</label>
-                                <input type="text" class="form-control" id="advance" v-model="wo.advance" @change="updateSubtotal()">
+                                <input type="number" class="form-control" id="advance" v-model="wo.advance" @change="updateSubtotal()">
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -253,7 +253,8 @@
                     'Cnc',
                     'Laser',
                     'Sublimación',
-                    'Serigrafía'
+                    'Serigrafía',
+                    'UV'
                 ],
                 deliveries: [
                     'Domicilio',
@@ -336,14 +337,25 @@
 						subtotal += (parseFloat(item.price) * parseFloat(item.quantity));
 					}
 				});
-				this.wo.subtotal = (subtotal).toFixed(2);
-				this.wo.iva = (subtotal * 1.16 - subtotal).toFixed(2)
+				this.wo.subtotal = this.addCommas(subtotal);
+				this.wo.iva = (subtotal * 1.16 - subtotal).toFixed(2);
 				this.wo.total = (subtotal * 1.16).toFixed(2);
 				if(!isNaN(parseFloat(this.wo.advance)) && isFinite(this.wo.advance)){
-					this.wo.toPay = ((subtotal * 1.16) - this.wo.advance).toFixed(2);
-				}
-			}
-    	},
+                    this.wo.toPay = ((subtotal * 1.16) - this.wo.advance).toFixed(2);
+                }
+            },
+            addCommas(nStr) {
+                nStr += '';
+                var x = nStr.split('.');
+                var x1 = x[0];
+                var x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+                return x1 + x2;
+            },
+        },
     	mounted(){
             if(this.id > 0){
                 this.getWo(this.id);
@@ -353,7 +365,7 @@
                 format: 'dd/mm/yyyy',
                 autoclose: true,
             });
-            this.wo.date = moment().format('DD/MM/YYYY');
+            this.wo.date = this.date = moment().format('DD/MM/YYYY');
 		},
     }
 </script>
