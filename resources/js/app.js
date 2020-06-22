@@ -28,7 +28,7 @@ import es from 'vee-validate/dist/locale/es';
 import VRuntimeTemplate from "v-runtime-template";
 // import vSelect from 'vue-select';
 
-import { esp } from 'vuejs-datepicker/dist/locale';
+
 
 
 // Vue Moment
@@ -49,6 +49,7 @@ Vue.component('multiselect', Multiselect);
 /// DATEPICKET
 import Datepicker from 'vuejs-datepicker';
 Vue.component('datepicker', Datepicker);
+import { esp } from 'vuejs-datepicker/dist/locale';
 
 
 

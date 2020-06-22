@@ -19,4 +19,12 @@ class WoDetail extends Model
     public function production(){
         return $this->hasMany(\App\Models\Production::class);
     }
+
+    public function Wo(){
+        return $this->belongsTo(\App\Models\Wo::class);
+    }
+
+    public static function getByProcess($process){
+        return WoDetail::with('Wo')->where('wodetail.status', $process);
+    }
 }

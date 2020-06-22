@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Production;
 use App\Models\Wo;
+use App\Models\WoDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -59,12 +60,23 @@ class ProductionController extends Controller
 
         DB::beginTransaction();
         try{
-            Production::create($data['production']);
+            $production =Production::create($data['production']);
 
             $wo = Wo::find($data['production']['wo_id']);
 
             $wo->status = $data['production']['process'];
 
+            $wodetail = WoDetail::find($production->wodetail_id);
+
+            if($production->process == 'Diseño') {
+                $wodetail->status = $wo->status = 'Producción';
+            }
+                
+            if($production->process == 'Producción'){
+                $wodetail->status = $wo->status = 'Acavados';
+            }
+
+            $wodetail->save();
             $wo->save();
 
             DB::commit();

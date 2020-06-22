@@ -21,6 +21,10 @@ class WoController extends Controller
         return Wo::with('wodetail')->orderBy('delivery_date')->get();  
     }
 
+    public function getByProcess($process) {        
+        return WoDetail::getByProcess($process)->get(); 
+    }
+
     public function filter($filter)
     {
         if($filter == "En proceso")

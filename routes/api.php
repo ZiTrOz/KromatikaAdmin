@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('wo', 'WoController');
 Route::get('/wo/filter/{filter}', 'WoController@filter');
+Route::get('/wo/getByProcess/{process}', 'WoController@getByProcess');
 Route::resource('production', 'ProductionController');
 Route::resource('users', 'UserController');
 Route::resource('delivery', 'DeliveryController');

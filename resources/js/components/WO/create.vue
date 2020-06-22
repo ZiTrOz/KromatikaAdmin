@@ -107,7 +107,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="date">Fecha de Entrega:</label>
-                                <datepicker v-model="date" :bootstrap-styling="true" :format="format" v-validate="'required'" data-vv-as="Fecha" 
+                                <datepicker :format="'dd/MM/yyyy'" v-model="date" :bootstrap-styling="true" :format="format" v-validate="'required'" data-vv-as="Fecha" 
                                         name="date" :class="{ 'is-invalid': submitted && errors.has('date') }"></datepicker>                                
                             </div>
                         </div>
