@@ -70,7 +70,7 @@ Vue.component('footer-component', require('./components/layouts/footer.vue').def
 
 // Vue.component('content-component', require('./components/layouts/content.vue').default);
 
-// Orden de Compra
+// Orden de servicio
 Vue.component('index-wo-component', require('./components/wo/index.vue').default);
 Vue.component('create-wo-component', require('./components/wo/create.vue').default);
 Vue.component('delivery-wo-component', require('./components/wo/delivery.vue').default);

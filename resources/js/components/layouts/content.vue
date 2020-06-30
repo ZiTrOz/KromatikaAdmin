@@ -5,7 +5,7 @@
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-              <h6 class="h2 text-white d-inline-block mb-0">Crear Orden de Compra</h6>              
+              <h6 class="h2 text-white d-inline-block mb-0">Crear Orden de Servicio</h6>              
             </div>
             <div class="col-lg-6 col-5 text-right">
               <a href="#" class="btn btn btn-success">Guardar</a>
@@ -20,7 +20,7 @@
       <div class="card mb-4">
         <!-- Card header -->
         <div class="card-header">
-          <h3 class="mb-0">Informacion de la Orden de Compra</h3>
+          <h3 class="mb-0">Informacion de la Orden de Servicio</h3>
         </div>
         <!-- Card body -->
         <div class="card-body">

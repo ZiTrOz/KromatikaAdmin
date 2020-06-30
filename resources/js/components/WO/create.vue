@@ -20,7 +20,7 @@
             <div class="card mb-4">
                 <!-- Card header -->
                 <div class="card-header">
-                    <h3 class="mb-0">Información de la Orden de Compra</h3>
+                    <h3 class="mb-0">Información de la Orden de Servicio</h3>
                 </div>
                 <!-- Card body -->
                 <div class="card-body">
@@ -42,8 +42,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="form-control-label" for="wonumber">Orden de Compra:</label>
-                                <input type="text" class="form-control" id="wonumber" v-model="wo.wonumber" placeholder="" v-validate="'required'" data-vv-as="Orden de Compra" name="wonumber" 
+                                <label class="form-control-label" for="wonumber">Orden de Servicio:</label>
+                                <input type="text" class="form-control" id="wonumber" v-model="wo.wonumber" placeholder="" v-validate="'required'" data-vv-as="Orden de Servicio" name="wonumber" 
                                     :class="{ 'is-invalid': submitted && errors.has('wonumber') }" />
                                 <div v-if="submitted && errors.has('wonumber')" class="invalid-feedback">
                                     {{ errors.first("wonumber") }}

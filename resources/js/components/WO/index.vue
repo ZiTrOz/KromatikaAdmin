@@ -5,7 +5,7 @@
                 <div class="header-body">
                     <div class="row align-items-center py-4">
                         <div class="col-lg-6 col-7">
-                            <h6 class="h2 text-white d-inline-block mb-0">Ordenes de Compra</h6>
+                            <h6 class="h2 text-white d-inline-block mb-0">Ordenes de Servicio</h6>
                         </div>
                         <div class="col-lg-6 col-5 text-right">
                             <button class="btn btn-sm btn-default" @click="newWo()">Nueva Orden de Trabajo</button>
@@ -19,7 +19,7 @@
             <div class="card mb-4">
                 <!-- Card header -->
                 <div class="card-header">
-                    <h3 class="mb-0">Información de la Orden de Compra</h3>
+                    <h3 class="mb-0">Información de la Orden de Servicio</h3>
                 </div>
                 <!-- Card body -->
                 <div class="card-body">

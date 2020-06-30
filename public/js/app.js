@@ -96486,7 +96486,7 @@ var render = function() {
                       staticClass: "form-control-label",
                       attrs: { for: "wonumber" }
                     },
-                    [_vm._v("Orden de Compra:")]
+                    [_vm._v("Orden de Servicio:")]
                   ),
                   _vm._v(" "),
                   _c("input", {
@@ -96512,7 +96512,7 @@ var render = function() {
                       type: "text",
                       id: "wonumber",
                       placeholder: "",
-                      "data-vv-as": "Orden de Compra",
+                      "data-vv-as": "Orden de Servicio",
                       name: "wonumber"
                     },
                     domProps: { value: _vm.wo.wonumber },
@@ -97309,7 +97309,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "mb-0" }, [
-        _vm._v("Información de la Orden de Compra")
+        _vm._v("Información de la Orden de Servicio")
       ])
     ])
   },
@@ -97491,7 +97491,7 @@ var render = function() {
                       staticClass: "form-control-label",
                       attrs: { for: "ponumber" }
                     },
-                    [_vm._v("Orden de Compra:")]
+                    [_vm._v("Orden de Servicio:")]
                   ),
                   _vm._v(" "),
                   _c("input", {
@@ -97984,7 +97984,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "mb-0" }, [
-        _vm._v("Información de la Orden de Compra")
+        _vm._v("Información de la Orden de Servicio")
       ])
     ])
   },
@@ -98520,7 +98520,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-lg-6 col-7" }, [
       _c("h6", { staticClass: "h2 text-white d-inline-block mb-0" }, [
-        _vm._v("Ordenes de Compra")
+        _vm._v("Ordenes de Servicio")
       ])
     ])
   },
@@ -98530,7 +98530,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "mb-0" }, [
-        _vm._v("Información de la Orden de Compra")
+        _vm._v("Información de la Orden de Servicio")
       ])
     ])
   },
@@ -118178,7 +118178,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('datepicker', vuejs_datepic
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('main-component', __webpack_require__(/*! ./components/layouts/main.vue */ "./resources/js/components/layouts/main.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('footer-component', __webpack_require__(/*! ./components/layouts/footer.vue */ "./resources/js/components/layouts/footer.vue")["default"]); // Vue.component('content-component', require('./components/layouts/content.vue').default);
-// Orden de Compra
+// Orden de servicio
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('index-wo-component', __webpack_require__(/*! ./components/wo/index.vue */ "./resources/js/components/wo/index.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('create-wo-component', __webpack_require__(/*! ./components/wo/create.vue */ "./resources/js/components/wo/create.vue")["default"]);

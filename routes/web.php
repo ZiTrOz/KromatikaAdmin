@@ -16,11 +16,11 @@ Route::get('/', function () {
     return view('main')->with(['component' => 'main', 'title' => '', 'id' => 0]);
 });
 
-Route::get('/ordentrabajo/crear', function () { return view('main')->with(['component' => 'create-wo', 'title' => 'Crear Orden de Compra', 'id' => 0]); });
-Route::get('/ordentrabajo/editar/{id}', function ($id) { return view('main')->with(['component' => 'edit-wo', 'title' => 'Editar Orden de Compra', 'id' => $id]); });
-Route::get('/ordentrabajo', function () { return view('main')->with(['component' => 'index-wo', 'title' => 'Ordenes de Compra', 'id' => 0]); });
+Route::get('/ordentrabajo/crear', function () { return view('main')->with(['component' => 'create-wo', 'title' => 'Crear Orden de Servicio', 'id' => 0]); });
+Route::get('/ordentrabajo/editar/{id}', function ($id) { return view('main')->with(['component' => 'edit-wo', 'title' => 'Editar Orden de Servicio', 'id' => $id]); });
+Route::get('/ordentrabajo', function () { return view('main')->with(['component' => 'index-wo', 'title' => 'Ordenes de Servicio', 'id' => 0]); });
 Route::get('/ordentrabajo/entrega/{id}', function ($id) { return view('main')->with(['component' => 'delivery-wo', 'title' => 'Entrega de Pedido', 'id' => $id]); });
-Route::get('/ordentrabajo/detalle/{id}', function ($id) { return view('main')->with(['component' => 'detail-wo', 'title' => 'Detalle de la Orden de Compra', 'id' => $id]); });
+Route::get('/ordentrabajo/detalle/{id}', function ($id) { return view('main')->with(['component' => 'detail-wo', 'title' => 'Detalle de la Orden de Servicio', 'id' => $id]); });
 Route::post('/po/delivery/{id}', 'WoController@delivery');
 Route::get('/po/search/{term}', 'WoController@search');
 

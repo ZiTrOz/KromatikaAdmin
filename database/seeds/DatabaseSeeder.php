@@ -21,6 +21,6 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        factory(\App\User::class, 11)->create();
+        factory(\App\User::class, 1)->create();
     }
 }
