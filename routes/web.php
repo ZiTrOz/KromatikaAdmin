@@ -50,3 +50,5 @@ Route::get('/encuesta/{id}', function ($id) {
         ->with('component', 'poll-component')
         ->with(['title' => '', 'id' => $id]);
 });
+
+Route::get('/usuarios', function () { return view('main')->with(['component' => 'users-index', 'title' => 'Usuarios', 'id' => 0]); });

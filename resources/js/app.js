@@ -84,6 +84,9 @@ Vue.component('inventory-index', require('./components/whs/inventory.vue').defau
 //ENCUENTAS
 Vue.component('poll-component', require('./components/polls/poll.vue').default);
 
+//USUARIOS
+Vue.component('users-index', require('./components/users/index.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

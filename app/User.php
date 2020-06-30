@@ -19,6 +19,19 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    public static function getRules(){
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|email',
+        ];
+
+        return $rules;
+    }
+
+    public static function getUsers(){
+        return User::all();
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *

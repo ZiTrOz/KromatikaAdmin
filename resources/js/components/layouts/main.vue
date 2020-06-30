@@ -11,6 +11,8 @@
   <inventory-index v-if="component == 'inventory-index'" :title="title" :id="id" ></inventory-index>
 
   <poll-component v-if="component == 'poll-component'" :title="title" :id="id"></poll-component>
+
+  <users-index v-if="component == 'users-index'" :title="title" :id="id"></users-index>
 </div>
 </template>
 <script>

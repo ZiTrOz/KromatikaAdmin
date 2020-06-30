@@ -75,6 +75,12 @@
               </div>
             </li>    
             <li class="nav-item">
+              <a class="nav-link" href="/usuarios" role="button">
+                <i class="fas fa-user text-primary"></i>
+                <span class="nav-link-text">Usuarios</span>
+              </a>              
+            </li>    
+            <li class="nav-item">
               <a class="nav-link" href="#navbar-warehouse" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-warehouse">
                 <i class="fas fa-cubes text-primary"></i>
                 <span class="nav-link-text">Almacén</span>
