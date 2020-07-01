@@ -32,7 +32,7 @@
     <div class="scrollbar-inner">
       <!-- Brand -->
       <div class="sidenav-header  d-flex  align-items-center">
-        <a class="navbar-brand" href="dashboard.html" style="color: #5e72e4; font-weight: bold;">
+        <a class="navbar-brand" href="/" style="color: #5e72e4; font-weight: bold;">
           <img src="../../assets/img/brand/kromatica.jpg" class="navbar-brand-img" alt="...">
           Kromatika
         </a>

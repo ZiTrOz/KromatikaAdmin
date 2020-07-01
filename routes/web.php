@@ -16,6 +16,10 @@ Route::get('/', function () {
     return view('main')->with(['component' => 'main', 'title' => '', 'id' => 0]);
 });
 
+Route::get('/defaultsite', function () {
+    return view('main')->with(['component' => 'main', 'title' => '', 'id' => 0]);
+});
+
 Route::get('/ordentrabajo/crear', function () { return view('main')->with(['component' => 'create-wo', 'title' => 'Crear Orden de Servicio', 'id' => 0]); });
 Route::get('/ordentrabajo/editar/{id}', function ($id) { return view('main')->with(['component' => 'edit-wo', 'title' => 'Editar Orden de Servicio', 'id' => $id]); });
 Route::get('/ordentrabajo', function () { return view('main')->with(['component' => 'index-wo', 'title' => 'Ordenes de Servicio', 'id' => 0]); });
