@@ -147,7 +147,7 @@ return [
     */
 
     'attributes' => [
-        'ponumber' => 'orden de servicio',
+        'ponumber' => 'orden de trabajo',
         'customer' => 'cliente',
         'phone' => 'telefono',
         'delivery' => 'entrega'

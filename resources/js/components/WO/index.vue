@@ -19,7 +19,7 @@
             <div class="card mb-4">
                 <!-- Card header -->
                 <div class="card-header">
-                    <h3 class="mb-0">Información de la Orden de Servicio</h3>
+                    <h3 class="mb-0">Información de la Orden de Trabajo</h3>
                 </div>
                 <!-- Card body -->
                 <div class="card-body">
@@ -76,7 +76,6 @@
 <script>  
     export default {
         mounted() {
-            console.log('Component mounted.');
         },
         data(){
             return {
@@ -135,7 +134,6 @@
                 let delivery_date = moment(wo.delivery_date);
                 let current_date = moment();
                 let diff = delivery_date.diff(current_date, 'd');
-                console.log(diff, wo.delivery_date);
                 return diff;
             }
         },

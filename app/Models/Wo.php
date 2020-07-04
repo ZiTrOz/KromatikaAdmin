@@ -26,6 +26,13 @@ class Wo extends Model
         'delivery_date',
         'machine',];
 
+    protected $maps = [
+        'date' => 'Fecha',
+        'customer' => 'Cliente',
+        'delivery' => 'Entrega',
+        'wonumber' => 'Orden de Trabajo',
+    ];
+
     public function production(){
         return $this->hasMany(\App\Models\Production::class);
     }

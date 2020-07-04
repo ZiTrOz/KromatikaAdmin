@@ -20,7 +20,7 @@
             <div class="card mb-4">
                 <!-- Card header -->
                 <div class="card-header">
-                    <h3 class="mb-0">Información de la Orden de Servicio</h3>
+                    <h3 class="mb-0">Información de la Orden de Trabajo</h3>
                 </div>
                 <!-- Card body -->
                 <div class="card-body">
@@ -42,15 +42,15 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="form-control-label" for="wonumber">Orden de Servicio:</label>
-                                <input type="text" class="form-control" id="wonumber" v-model="wo.wonumber" placeholder="" v-validate="'required'" data-vv-as="Orden de Servicio" name="wonumber" 
+                                <label class="form-control-label" for="wonumber">Orden de Trabajo:</label>
+                                <input type="text" class="form-control" id="wonumber" v-model="wo.wonumber" placeholder="" v-validate="'required'" data-vv-as="Orden de Trabajo" name="wonumber" 
                                     :class="{ 'is-invalid': submitted && errors.has('wonumber') }" />
                                 <div v-if="submitted && errors.has('wonumber')" class="invalid-feedback">
                                     {{ errors.first("wonumber") }}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="folio">Folio:</label>
                                 <input type="text" class="form-control" id="folio" v-model="wo.folio" placeholder="" v-validate="'required'" data-vv-as="Folio" name="folio" 
@@ -59,7 +59,7 @@
                                     {{ errors.first("folio") }}
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="client">Cliente:</label>
@@ -106,7 +106,10 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="form-control-label" for="date">Fecha de Entrega:</label>
+                                <label class="form-control-label" for="delivery_date">Fecha de Entrega:</label>
+                                <!-- <date-picker v-model="wo.delivery_date" value-type="DD/MM/YYYY" format="DD/MM/YYYY" v-validate="'required'" data-vv-as="Fecha de Entrega" name="delivery_date" :class="{ 'is-invalid': submitted && errors.has('delivery_date') }">
+                                    <div class="invalid-feedback" v-if="submitted && errors.has('delivery_date')">{{ errors.first("delivery_date") }}</div>
+                                </date-picker> -->
                                 <datepicker :format="'dd/MM/yyyy'" v-model="date" :bootstrap-styling="true" v-validate="'required'" data-vv-as="Fecha" 
                                         name="date" :class="{ 'is-invalid': submitted && errors.has('date') }"></datepicker>                                
                             </div>
@@ -268,7 +271,8 @@
     			var row = {
     				quantity: '',
     				description: '',
-    				price: ''
+                    price: '',
+                    machine: 'Xerox'
     			};
     			this.wo.wodetail.push(row);
     		},
@@ -289,7 +293,6 @@
     		save(){
                 this.submitted = true;
                 if(this.date !== null){
-                    console.log(this.date);
                     this.wo.delivery_date = moment(this.date, 'DD/MM/YYYY').format('MM/DD/YYYY');
                 }
                 else{
@@ -306,7 +309,6 @@
                         this.showLoading();
     					this.wo.errors = [];
                         this.message = "";
-                        // this.wo.date = moment(this.date);
 						axios.post('/api/wo', this.wo)
 						.then(response => {
 							this.wo = {

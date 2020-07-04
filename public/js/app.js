@@ -3356,6 +3356,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     title: '',
@@ -3394,7 +3397,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var row = {
         quantity: '',
         description: '',
-        price: ''
+        price: '',
+        machine: 'Xerox'
       };
       this.wo.wodetail.push(row);
     },
@@ -3419,7 +3423,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       this.submitted = true;
 
       if (this.date !== null) {
-        console.log(this.date);
         this.wo.delivery_date = moment(this.date, 'DD/MM/YYYY').format('MM/DD/YYYY');
       } else {
         this.ShowModalMessage('Ingrese una fecha de entrega', 1);
@@ -3436,8 +3439,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           _this2.showLoading();
 
           _this2.wo.errors = [];
-          _this2.message = ""; // this.wo.date = moment(this.date);
-
+          _this2.message = "";
           axios.post('/api/wo', _this2.wo).then(function (response) {
             _this2.wo = {
               errors: [],
@@ -4022,9 +4024,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
-  },
+  mounted: function mounted() {},
   data: function data() {
     return {
       wos: [],
@@ -4082,7 +4082,6 @@ __webpack_require__.r(__webpack_exports__);
       var delivery_date = moment(wo.delivery_date);
       var current_date = moment();
       var diff = delivery_date.diff(current_date, 'd');
-      console.log(diff, wo.delivery_date);
       return diff;
     }
   },
@@ -96486,7 +96485,7 @@ var render = function() {
                       staticClass: "form-control-label",
                       attrs: { for: "wonumber" }
                     },
-                    [_vm._v("Orden de Servicio:")]
+                    [_vm._v("Orden de Trabajo:")]
                   ),
                   _vm._v(" "),
                   _c("input", {
@@ -96512,7 +96511,7 @@ var render = function() {
                       type: "text",
                       id: "wonumber",
                       placeholder: "",
-                      "data-vv-as": "Orden de Servicio",
+                      "data-vv-as": "Orden de Trabajo",
                       name: "wonumber"
                     },
                     domProps: { value: _vm.wo.wonumber },
@@ -96531,66 +96530,6 @@ var render = function() {
                         _vm._v(
                           "\n                                " +
                             _vm._s(_vm.errors.first("wonumber")) +
-                            "\n                            "
-                        )
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-4" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-control-label",
-                      attrs: { for: "folio" }
-                    },
-                    [_vm._v("Folio:")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.wo.folio,
-                        expression: "wo.folio"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required",
-                        expression: "'required'"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: {
-                      "is-invalid": _vm.submitted && _vm.errors.has("folio")
-                    },
-                    attrs: {
-                      type: "text",
-                      id: "folio",
-                      placeholder: "",
-                      "data-vv-as": "Folio",
-                      name: "folio"
-                    },
-                    domProps: { value: _vm.wo.folio },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.wo, "folio", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.submitted && _vm.errors.has("folio")
-                    ? _c("div", { staticClass: "invalid-feedback" }, [
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(_vm.errors.first("folio")) +
                             "\n                            "
                         )
                       ])
@@ -96788,7 +96727,7 @@ var render = function() {
                       "label",
                       {
                         staticClass: "form-control-label",
-                        attrs: { for: "date" }
+                        attrs: { for: "delivery_date" }
                       },
                       [_vm._v("Fecha de Entrega:")]
                     ),
@@ -97309,7 +97248,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "mb-0" }, [
-        _vm._v("Información de la Orden de Servicio")
+        _vm._v("Información de la Orden de Trabajo")
       ])
     ])
   },
@@ -97491,7 +97430,7 @@ var render = function() {
                       staticClass: "form-control-label",
                       attrs: { for: "ponumber" }
                     },
-                    [_vm._v("Orden de Servicio:")]
+                    [_vm._v("Orden de Trabajo:")]
                   ),
                   _vm._v(" "),
                   _c("input", {
@@ -97984,7 +97923,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "mb-0" }, [
-        _vm._v("Información de la Orden de Servicio")
+        _vm._v("Información de la Orden de Trabajo")
       ])
     ])
   },
@@ -98530,7 +98469,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "mb-0" }, [
-        _vm._v("Información de la Orden de Servicio")
+        _vm._v("Información de la Orden de Trabajo")
       ])
     ])
   },
@@ -118161,6 +118100,11 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin(_components_mixins_main_js__WEB
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('multiselect', vue_multiselect__WEBPACK_IMPORTED_MODULE_8___default.a); // Vue.component('v-select', vSelect);
 /// DATEPICKET
+// Datepicker
+// import DatePicker from 'vue2-datepicker';
+// import 'vue2-datepicker/index.css';
+// import 'vue2-datepicker/locale/es';
+// Vue.use(DatePicker);
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('datepicker', vuejs_datepicker__WEBPACK_IMPORTED_MODULE_9__["default"]);
@@ -118178,7 +118122,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('datepicker', vuejs_datepic
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('main-component', __webpack_require__(/*! ./components/layouts/main.vue */ "./resources/js/components/layouts/main.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('footer-component', __webpack_require__(/*! ./components/layouts/footer.vue */ "./resources/js/components/layouts/footer.vue")["default"]); // Vue.component('content-component', require('./components/layouts/content.vue').default);
-// Orden de servicio
+// Orden de Trabajo
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('index-wo-component', __webpack_require__(/*! ./components/wo/index.vue */ "./resources/js/components/wo/index.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('create-wo-component', __webpack_require__(/*! ./components/wo/create.vue */ "./resources/js/components/wo/create.vue")["default"]);

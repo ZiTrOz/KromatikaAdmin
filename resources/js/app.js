@@ -47,6 +47,11 @@ Vue.component('multiselect', Multiselect);
 // Vue.component('v-select', vSelect);
 
 /// DATEPICKET
+// Datepicker
+// import DatePicker from 'vue2-datepicker';
+// import 'vue2-datepicker/index.css';
+// import 'vue2-datepicker/locale/es';
+// Vue.use(DatePicker);
 import Datepicker from 'vuejs-datepicker';
 Vue.component('datepicker', Datepicker);
 import { esp } from 'vuejs-datepicker/dist/locale';
@@ -70,7 +75,7 @@ Vue.component('footer-component', require('./components/layouts/footer.vue').def
 
 // Vue.component('content-component', require('./components/layouts/content.vue').default);
 
-// Orden de servicio
+// Orden de Trabajo
 Vue.component('index-wo-component', require('./components/wo/index.vue').default);
 Vue.component('create-wo-component', require('./components/wo/create.vue').default);
 Vue.component('delivery-wo-component', require('./components/wo/delivery.vue').default);

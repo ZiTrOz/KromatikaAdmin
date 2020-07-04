@@ -72,16 +72,25 @@ class WoController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        Validator::make($data, [
+        $validator = Validator::make($data, [
             'wonumber' => 'required|unique:wo',
-			'folio' => 'required|unique:wo',
 			'date' => 'required',
             'customer' => 'required',
             'phone' => 'required',
             'delivery' => 'required',
             'delivery_date' => 'required',
-        ])->validate();
+        ])->setAttributeNames(
+            [
+                'wonumber' => 'Orden de Trabajo',
+                'date' => 'Fecha',
+                'customer' => 'Cliente',
+                'phone' => 'Teléfono',
+                'delivery' => 'Entrega',
+                'delivery_date' => 'Fecha de Entrega',
+            ], 
+        );
 
+        $validator->validate();
         // if ($validator->fails()) {
         //     return redirect('oc/crear')
         //                 ->withErrors($validator)
@@ -98,6 +107,9 @@ class WoController extends Controller
             $data['subtotal'] = doubleval($data['subtotal']);
             $data['iva'] = doubleval($data['iva']);
             $data['total'] = doubleval($data['total']);
+
+            $folio = Wo::select(DB::raw('IFNULL(MAX(id),0) as id'))->first();
+            $data['folio'] = 'K-' . sprintf('%07d', $folio->id + 1);
             $wo = Wo::create($data);
 
             foreach($woDetail as $prod){
