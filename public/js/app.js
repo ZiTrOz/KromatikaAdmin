@@ -3359,6 +3359,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+var state = {
+  disabledDates: {
+    to: new Date(2020, 6, 13) // Disable all dates up to specific date   
+
+  }
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     title: '',
@@ -3389,7 +3395,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       submitted: false,
       message: "",
       machines: ['Xerox', 'Xuli', 'Infinity', 'Hp', 'Cnc', 'Laser', 'Sublimación', 'Serigrafía', 'UV'],
-      deliveries: ['Domicilio', 'Mostrador', 'Instalación']
+      deliveries: ['Domicilio', 'Mostrador', 'Instalación'],
+      state: {
+        disabledDates: {
+          to: new Date() // Disable all dates up to specific date   
+
+        }
+      },
+      currentDate: null
     };
   },
   methods: {
@@ -3501,6 +3514,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       autoclose: true
     });
     this.wo.date = this.date = moment().format('DD/MM/YYYY');
+    this.currentDate = new Date();
+    this.currentDate.setDate(this.currentDate.getDate() - 1);
+    this.state.disabledDates.to = this.currentDate;
   }
 });
 
@@ -96748,7 +96764,8 @@ var render = function() {
                         format: "dd/MM/yyyy",
                         "bootstrap-styling": true,
                         "data-vv-as": "Fecha",
-                        name: "date"
+                        name: "date",
+                        "disabled-dates": _vm.state.disabledDates
                       },
                       model: {
                         value: _vm.date,

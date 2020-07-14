@@ -111,7 +111,7 @@
                                     <div class="invalid-feedback" v-if="submitted && errors.has('delivery_date')">{{ errors.first("delivery_date") }}</div>
                                 </date-picker> -->
                                 <datepicker :format="'dd/MM/yyyy'" v-model="date" :bootstrap-styling="true" v-validate="'required'" data-vv-as="Fecha" 
-                                        name="date" :class="{ 'is-invalid': submitted && errors.has('date') }"></datepicker>                                
+                                        name="date" :class="{ 'is-invalid': submitted && errors.has('date') }" :disabled-dates="state.disabledDates"></datepicker>                                
                             </div>
                         </div>
                     </div>
@@ -219,6 +219,11 @@
     </div>
 </template>
 <script>
+    var state = {
+        disabledDates: {
+            to: new Date(2020, 6, 13), // Disable all dates up to specific date   
+        }
+    }
     export default {		
         props: {
             title: '',
@@ -263,8 +268,14 @@
                     'Domicilio',
                     'Mostrador',
                     'Instalación'
-                ]
-    		}
+                ],
+                state: {
+                    disabledDates: {
+                        to: new Date(), // Disable all dates up to specific date   
+                    }
+                },
+                currentDate: null
+            }            
     	},
     	methods: {
     		addRow(){
@@ -368,6 +379,9 @@
                 autoclose: true,
             });
             this.wo.date = this.date = moment().format('DD/MM/YYYY');
+            this.currentDate = new Date();
+            this.currentDate.setDate(this.currentDate.getDate() - 1);
+            this.state.disabledDates.to = this.currentDate;
 		},
     }
 </script>

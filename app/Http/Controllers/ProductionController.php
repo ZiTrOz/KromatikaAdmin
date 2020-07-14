@@ -96,6 +96,46 @@ class ProductionController extends Controller
         // }
     }
 
+    public function changeStatus(Request $request)
+    {
+        $data = $request->all();
+        Validator::make($data['production'], [
+            'wodetail_id' => 'required|',
+			'wo_id' => 'required',
+			'user_id' => 'required'
+        ])->validate();
+
+        DB::beginTransaction();
+        try{           
+
+            $wo = Wo::find($data['production']['wo_id']);
+
+            $wo->status = $data['production']['process'];
+
+            $wodetail = WoDetail::find($data['production']['wodetail_id']);
+            
+            $wodetail->status = $wo->status = 'Trabajando';
+
+            $wodetail->save();
+            $wo->save();
+
+            DB::commit();
+        }
+        catch(\PDOException $e){
+            DB::rollback();
+            return response()->json(['error' => $e], 500);
+        }
+
+        return response()->json(['success' => 'OK'], 200);       
+        
+
+        // if ($validator->fails()) {
+        //     return redirect('oc/crear')
+        //                 ->withErrors($validator)
+        //                 ->withInput();
+        // }
+    }
+
     /**
      * Display the specified resource.
      *

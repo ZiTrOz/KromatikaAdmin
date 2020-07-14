@@ -37,3 +37,5 @@ Route::get('locations/getByWarehouse/{warehouse}', 'LocationController@getByWare
 Route::resource('polls', 'PollsController');
 
 Route::post('store-event', 'PollsController@storeEvent');
+
+Route::post('production/changestatus', 'ProductionController@changeStatus');
