@@ -3416,7 +3416,7 @@ var state = {
       this.wo.wodetail.push(row);
     },
     cancel: function cancel() {
-      window.location.href = "/oc";
+      window.location.href = "/ordentrabajo";
     },
     deleteRow: function deleteRow(index) {
       this.wo.wodetail.splice(index, 1);
@@ -4054,7 +4054,25 @@ __webpack_require__.r(__webpack_exports__);
       window.location.href = "/ordentrabajo/entrega/" + wo.id;
     },
     editWo: function editWo(wo) {
-      window.location.href = "/ordentrabajo/editar/" + wo.id;
+      console.log(wo);
+
+      if (wo.status === 'Trabajando') {
+        Swal.fire({
+          text: "Ya se esta trabajando esta orden, avise a produccion antes de realizar algun cambio",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'De acuerdo!',
+          cancelButtonText: 'Cancelar'
+        }).then(function (result) {
+          if (result.value) {
+            window.location.href = "/ordentrabajo/editar/" + wo.id;
+          }
+        });
+      } else {
+        window.location.href = "/ordentrabajo/editar/" + wo.id;
+      }
     },
     viewDetail: function viewDetail(wo) {
       window.location.href = "/ordentrabajo/detalle/" + wo.id;
@@ -98424,17 +98442,15 @@ var render = function() {
                             }
                           }),
                           _vm._v(" "),
-                          wo.status === "Ingresada"
-                            ? _c("i", {
-                                staticClass: "fas fa-edit",
-                                attrs: { title: "Editar" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.editWo(wo)
-                                  }
-                                }
-                              })
-                            : _vm._e(),
+                          _c("i", {
+                            staticClass: "fas fa-edit",
+                            attrs: { title: "Editar" },
+                            on: {
+                              click: function($event) {
+                                return _vm.editWo(wo)
+                              }
+                            }
+                          }),
                           _vm._v(" "),
                           _c("i", {
                             class: {

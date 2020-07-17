@@ -60,7 +60,7 @@
                                     <td>{{ wo.status }}</td>
                                     <td>
                                         <i class="fas fa-eye" title="Ver Detalle" @click="viewDetail(wo)"></i>
-                                        <i v-if="wo.status === 'Ingresada'" class="fas fa-edit" title="Editar" @click="editWo(wo)"></i>
+                                        <i class="fas fa-edit" title="Editar" @click="editWo(wo)"></i>
                                         <i :class="{'fas fa-shipping-fast' : wo.status === 'Por Entregar'}" title="Entregar" @click="deliveryWo(wo)"></i>
                                         <i :class="{'fas fa-check' : wo.status === 'Entregado'}" title="Entregado"></i>
                                     </td>
@@ -92,8 +92,27 @@
             deliveryWo(wo){
                 window.location.href = "/ordentrabajo/entrega/" + wo.id;
             },
-            editWo(wo){
-                window.location.href = "/ordentrabajo/editar/" + wo.id;
+            editWo(wo) {
+                console.log(wo);
+                if(wo.status === 'Trabajando'){
+                    Swal.fire({
+                        text: "Ya se esta trabajando esta orden, avise a produccion antes de realizar algun cambio",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'De acuerdo!',
+                        cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                        if (result.value) {
+                            window.location.href = "/ordentrabajo/editar/" + wo.id;
+                        }
+                    })
+                }
+                else{
+                    window.location.href = "/ordentrabajo/editar/" + wo.id;
+                }
+                
             },
             viewDetail(wo){
                 window.location.href = "/ordentrabajo/detalle/" + wo.id;

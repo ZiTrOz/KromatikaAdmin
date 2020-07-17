@@ -288,7 +288,7 @@
     			this.wo.wodetail.push(row);
     		},
             cancel(){
-                window.location.href = "/oc";
+                window.location.href = "/ordentrabajo";
             },
     		deleteRow(index) {
 				this.wo.wodetail.splice(index,1);
