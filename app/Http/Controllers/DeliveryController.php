@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Delivery;
 use Illuminate\Http\Request;
 use App\Models\File;
-use App\Models\Wo;
+use App\Models\WoDetail;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class DeliveryController extends Controller
 {
@@ -21,27 +24,51 @@ class DeliveryController extends Controller
 
     public function saveFirma($id,Request $request)
     {
-        //dd($request);
-        //$delivey = Delivey::create($request);
-        //php$var= "file1";
 
-        $po = Wo::find($id);
-        $po->status = 'Entregado';
-        $po->save();
-        $path = $request->firma->store('public/firmas/');
-        $file = new File();
+        // $data = $request;
 
-        $file->filetable_id = $id;
-        $file->filetable_type = 'App\Models\Delivery';
-        $file->type = 'Firma';
+        // $validator = Validator::make($data, [
+        //     'wo_id' => 'required',
+        //     'wodetail_id' => 'required'
+        // ])->setAttributeNames(
+        //     [
+        //         'wo_id' => 'Orden de Trabajo',
+        //         'wodetail_id' => 'Producto',
+        //     ], 
+        // );
 
-        $file->url = str_replace('public', 'storage', $path);
-
-        $file->save();
-
-        return response()->json([
-            'message' => 'Ok!'
-        ], 201);
+        // $validator->validate();
+        DB::beginTransaction();
+        try {
+            $woDetail = WoDetail::find($id);
+            $woDetail->status = 'Entregado';
+    
+            Delivery::create([
+                'wo_id' => $woDetail->wo_id,
+                'wodetail_id' => $id,
+                'delivery_date'=> Carbon::now(),
+                'user_id' => 1,
+                'notes' => $request['notes']
+            ]);
+            $woDetail->save();
+            $path = $request->firma->store('public/firmas/');
+            $file = new File();
+    
+            $file->filetable_id = $id;
+            $file->filetable_type = 'App\Models\Delivery';
+            $file->type = 'Firma';
+    
+            $file->url = str_replace('public', 'storage', $path);
+    
+            $file->save();
+            DB::commit();
+        
+        } catch(\PDOException $e){
+            DB::rollback();
+            return response()->json(['error' => $e], 500);
+        }
+        return response()->json(['success' => 'OK'], 200);    
+       
     }
 
     /**

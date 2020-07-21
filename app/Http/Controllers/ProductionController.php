@@ -76,6 +76,10 @@ class ProductionController extends Controller
                 $wodetail->status = $wo->status = 'Acabados ';
             }
 
+            if($production->process == 'Acabados'){
+                $wodetail->status = $wo->status = 'Terminado ';
+            }
+
             $wodetail->save();
             $wo->save();
 

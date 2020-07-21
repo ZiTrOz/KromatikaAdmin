@@ -3359,6 +3359,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
 var state = {
   disabledDates: {
     to: new Date(2020, 6, 13) // Disable all dates up to specific date   
@@ -3375,11 +3378,11 @@ var state = {
       format: 'dd/MM/yyyy',
       date: null,
       wo: {
-        advance: '0.00',
-        toPay: '0.00',
-        subtotal: '0.00',
-        iva: '0.00',
-        total: '0.00',
+        advance: '0',
+        toPay: '0',
+        subtotal: '0',
+        iva: '0',
+        total: '0',
         date: '',
         wonumber: '',
         folio: '',
@@ -3402,7 +3405,17 @@ var state = {
 
         }
       },
-      currentDate: null
+      currentDate: null,
+      money: {
+        decimal: '.',
+        thousands: ',',
+        prefix: '$ ',
+        suffix: '',
+        precision: 2,
+        masked: false
+        /* doesn't work with directive */
+
+      }
     };
   },
   methods: {
@@ -3428,6 +3441,7 @@ var state = {
       axios.get('/api/wo/' + id).then(function (response) {
         _this.wo = response.data;
         _this.wo.errors = [];
+        _this.date = new Date(_this.wo.delivery_date);
       });
     },
     save: function save() {
@@ -3452,25 +3466,43 @@ var state = {
           _this2.showLoading();
 
           _this2.wo.errors = [];
-          _this2.message = "";
-          axios.post('/api/wo', _this2.wo).then(function (response) {
-            _this2.wo = {
-              errors: [],
-              wodetail: []
-            };
-            _this2.submitted = false;
-            window.location.href = "/ordentrabajo";
+          _this2.message = ""; // Actualizar orden
 
-            _this2.stopLoading();
-          })["catch"](function (errors) {
-            _this2.submitted = false;
+          if (_this2.wo.id > 0) {
+            axios.put('/api/wo/' + _this2.wo.id, _this2.wo).then(function (response) {
+              _this2.submitted = false; // window.location.href = "/ordentrabajo";
 
-            _this2.stopLoading();
+              _this2.stopLoading();
 
-            if (_typeof(errors.response.data) === 'object') {
-              if (errors.response.data.errors != undefined) _this2.wo.errors = _.flatten(_.toArray(errors.response.data.errors));else _this2.wo.errors = ['Algo salio mal!'];
-            } else _this2.wo.errors = ['Algo salio mal!'];
-          });
+              _this2.ShowModalMessage('Orden Actualizada', 4);
+            })["catch"](function (errors) {
+              _this2.submitted = false;
+
+              _this2.stopLoading();
+
+              if (_typeof(errors.response.data) === 'object') {
+                if (errors.response.data.errors != undefined) _this2.wo.errors = _.flatten(_.toArray(errors.response.data.errors));else _this2.wo.errors = ['Algo salio mal!'];
+              } else _this2.wo.errors = ['Algo salio mal!'];
+            });
+          } //Crear orden
+          else {
+              axios.post('/api/wo', _this2.wo).then(function (response) {
+                _this2.wo = respinse.data;
+                _this2.submitted = false; // window.location.href = "/ordentrabajo";
+
+                _this2.stopLoading();
+
+                _this2.ShowMessagePopup('Orden Creada, No. de Folio: ' + _this2.wo.folio, 4);
+              })["catch"](function (errors) {
+                _this2.submitted = false;
+
+                _this2.stopLoading();
+
+                if (_typeof(errors.response.data) === 'object') {
+                  if (errors.response.data.errors != undefined) _this2.wo.errors = _.flatten(_.toArray(errors.response.data.errors));else _this2.wo.errors = ['Algo salio mal!'];
+                } else _this2.wo.errors = ['Algo salio mal!'];
+              });
+            }
         }
       });
     },
@@ -3481,26 +3513,16 @@ var state = {
           subtotal += parseFloat(item.price) * parseFloat(item.quantity);
         }
       });
-      this.wo.subtotal = this.addCommas(subtotal);
-      this.wo.iva = (subtotal * 1.16 - subtotal).toFixed(2);
-      this.wo.total = (subtotal * 1.16).toFixed(2);
+      this.wo.subtotal = subtotal;
+      this.wo.iva = subtotal * 1.16 - subtotal;
+      this.wo.total = subtotal * 1.16;
 
       if (!isNaN(parseFloat(this.wo.advance)) && isFinite(this.wo.advance)) {
-        this.wo.toPay = (subtotal * 1.16 - this.wo.advance).toFixed(2);
+        if (this.wo.advance < 0) {
+          this.ShowMessagePopup('El anticipo debe ser mayor a zero', 2);
+          this.wo.advance = 0;
+        } else this.wo.toPay = subtotal * 1.16 - this.wo.advance;
       }
-    },
-    addCommas: function addCommas(nStr) {
-      nStr += '';
-      var x = nStr.split('.');
-      var x1 = x[0];
-      var x2 = x.length > 1 ? '.' + x[1] : '';
-      var rgx = /(\d+)(\d{3})/;
-
-      while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-      }
-
-      return x1 + x2;
     }
   },
   mounted: function mounted() {
@@ -3887,6 +3909,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     title: '',
@@ -3941,6 +3965,19 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       });
+    },
+    addCommas: function addCommas(nStr) {
+      nStr += '';
+      var x = nStr.split('.');
+      var x1 = x[0];
+      var x2 = x.length > 1 ? '.' + x[1] : '';
+      var rgx = /(\d+)(\d{3})/;
+
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      }
+
+      return x1 + x2;
     }
   },
   created: function created() {
@@ -83027,6 +83064,17 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/v-money/dist/v-money.js":
+/*!**********************************************!*\
+  !*** ./node_modules/v-money/dist/v-money.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(e,t){ true?module.exports=t():undefined})(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return e[r].call(i.exports,i,i.exports,t),i.l=!0,i.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p=".",t(t.s=9)}([function(e,t,n){"use strict";t.a={prefix:"",suffix:"",thousands:",",decimal:".",precision:2}},function(e,t,n){"use strict";var r=n(2),i=n(5),u=n(0);t.a=function(e,t){if(t.value){var o=n.i(i.a)(u.a,t.value);if("INPUT"!==e.tagName.toLocaleUpperCase()){var a=e.getElementsByTagName("input");1!==a.length||(e=a[0])}e.oninput=function(){var t=e.value.length-e.selectionEnd;e.value=n.i(r.a)(e.value,o),t=Math.max(t,o.suffix.length),t=e.value.length-t,t=Math.max(t,o.prefix.length+1),n.i(r.b)(e,t),e.dispatchEvent(n.i(r.c)("change"))},e.onfocus=function(){n.i(r.b)(e,e.value.length-o.suffix.length)},e.oninput(),e.dispatchEvent(n.i(r.c)("input"))}}},function(e,t,n){"use strict";function r(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:m.a;"number"==typeof e&&(e=e.toFixed(o(t.precision)));var n=e.indexOf("-")>=0?"-":"",r=u(e),i=c(r,t.precision),a=d(i).split("."),p=a[0],l=a[1];return p=f(p,t.thousands),t.prefix+n+s(p,l,t.decimal)+t.suffix}function i(e,t){var n=e.indexOf("-")>=0?-1:1,r=u(e),i=c(r,t);return parseFloat(i)*n}function u(e){return d(e).replace(/\D+/g,"")||"0"}function o(e){return a(0,e,20)}function a(e,t,n){return Math.max(e,Math.min(t,n))}function c(e,t){var n=Math.pow(10,t);return(parseFloat(e)/n).toFixed(o(t))}function f(e,t){return e.replace(/(\d)(?=(?:\d{3})+\b)/gm,"$1"+t)}function s(e,t,n){return t?e+n+t:e}function d(e){return e?e.toString():""}function p(e,t){var n=function(){e.setSelectionRange(t,t)};e===document.activeElement&&(n(),setTimeout(n,1))}function l(e){var t=document.createEvent("Event");return t.initEvent(e,!0,!0),t}var m=n(0);n.d(t,"a",function(){return r}),n.d(t,"d",function(){return i}),n.d(t,"b",function(){return p}),n.d(t,"c",function(){return l})},function(e,t,n){"use strict";function r(e,t){t&&Object.keys(t).map(function(e){a.a[e]=t[e]}),e.directive("money",o.a),e.component("money",u.a)}Object.defineProperty(t,"__esModule",{value:!0});var i=n(6),u=n.n(i),o=n(1),a=n(0);n.d(t,"Money",function(){return u.a}),n.d(t,"VMoney",function(){return o.a}),n.d(t,"options",function(){return a.a}),n.d(t,"VERSION",function(){return c});var c="0.8.1";t.default=r,"undefined"!=typeof window&&window.Vue&&window.Vue.use(r)},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),i=n(0),u=n(2);t.default={name:"Money",props:{value:{required:!0,type:[Number,String],default:0},masked:{type:Boolean,default:!1},precision:{type:Number,default:function(){return i.a.precision}},decimal:{type:String,default:function(){return i.a.decimal}},thousands:{type:String,default:function(){return i.a.thousands}},prefix:{type:String,default:function(){return i.a.prefix}},suffix:{type:String,default:function(){return i.a.suffix}}},directives:{money:r.a},data:function(){return{formattedValue:""}},watch:{value:{immediate:!0,handler:function(e,t){var r=n.i(u.a)(e,this.$props);r!==this.formattedValue&&(this.formattedValue=r)}}},methods:{change:function(e){this.$emit("input",this.masked?e.target.value:n.i(u.d)(e.target.value,this.precision))}}}},function(e,t,n){"use strict";t.a=function(e,t){return e=e||{},t=t||{},Object.keys(e).concat(Object.keys(t)).reduce(function(n,r){return n[r]=void 0===t[r]?e[r]:t[r],n},{})}},function(e,t,n){var r=n(7)(n(4),n(8),null,null);e.exports=r.exports},function(e,t){e.exports=function(e,t,n,r){var i,u=e=e||{},o=typeof e.default;"object"!==o&&"function"!==o||(i=e,u=e.default);var a="function"==typeof u?u.options:u;if(t&&(a.render=t.render,a.staticRenderFns=t.staticRenderFns),n&&(a._scopeId=n),r){var c=a.computed||(a.computed={});Object.keys(r).forEach(function(e){var t=r[e];c[e]=function(){return t}})}return{esModule:i,exports:u,options:a}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"money",rawName:"v-money",value:{precision:e.precision,decimal:e.decimal,thousands:e.thousands,prefix:e.prefix,suffix:e.suffix},expression:"{precision, decimal, thousands, prefix, suffix}"}],staticClass:"v-money",attrs:{type:"tel"},domProps:{value:e.formattedValue},on:{change:e.change}})},staticRenderFns:[]}},function(e,t,n){e.exports=n(3)}])});
+
+/***/ }),
+
 /***/ "./node_modules/v-runtime-template/dist/v-runtime-template.es.js":
 /*!***********************************************************************!*\
   !*** ./node_modules/v-runtime-template/dist/v-runtime-template.es.js ***!
@@ -96801,6 +96849,8 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "row" }),
             _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
             _c("div", { staticClass: "row align-items-center" }, [
               _c("div", { staticClass: "col-lg-12 col-12 text-right" }, [
                 _c(
@@ -96822,7 +96872,7 @@ var render = function() {
             _c("br"),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
-              _c("div", {}, [
+              _c("div", { staticClass: "col-12" }, [
                 _c(
                   "table",
                   {
@@ -96842,14 +96892,35 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
+                                  value: prod.id,
+                                  expression: "prod.id"
+                                }
+                              ],
+                              attrs: { type: "hidden" },
+                              domProps: { value: prod.id },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(prod, "id", $event.target.value)
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
                                   value: prod.quantity,
                                   expression: "prod.quantity"
                                 },
                                 {
                                   name: "validate",
                                   rawName: "v-validate",
-                                  value: "required",
-                                  expression: "'required'"
+                                  value: "required|min_value:1",
+                                  expression: "'required|min_value:1'"
                                 }
                               ],
                               staticClass: "form-control",
@@ -96859,6 +96930,7 @@ var render = function() {
                               },
                               attrs: {
                                 type: "number",
+                                min: "0",
                                 placeholder: "Cantidad",
                                 "data-vv-as": "Cantidad",
                                 id: "qty" + index,
@@ -96960,8 +97032,8 @@ var render = function() {
                                 {
                                   name: "validate",
                                   rawName: "v-validate",
-                                  value: "required",
-                                  expression: "'required'"
+                                  value: "required|min_value:1",
+                                  expression: "'required|min_value:1'"
                                 }
                               ],
                               staticClass: "form-control",
@@ -96972,6 +97044,7 @@ var render = function() {
                               },
                               attrs: {
                                 type: "number",
+                                min: "0",
                                 placeholder: "Precio",
                                 "data-vv-as": "Precio",
                                 id: "price" + index,
@@ -97088,183 +97161,212 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-control-label",
-                      attrs: { for: "advance" }
-                    },
-                    [_vm._v("Anticipo:")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.wo.advance,
-                        expression: "wo.advance"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "number", id: "advance" },
-                    domProps: { value: _vm.wo.advance },
-                    on: {
-                      change: function($event) {
-                        return _vm.updateSubtotal()
+                        staticClass: "form-control-label",
+                        attrs: { for: "advance" }
                       },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.wo, "advance", $event.target.value)
-                      }
-                    }
-                  })
-                ])
+                      [_vm._v("Anticipo:")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "money",
+                      _vm._b(
+                        {
+                          directives: [
+                            {
+                              name: "validate",
+                              rawName: "v-validate",
+                              value: "min_value:0",
+                              expression: "'min_value:0'"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            "data-vv-as": "anticipo",
+                            id: "advance",
+                            name: "advance"
+                          },
+                          nativeOn: {
+                            change: function($event) {
+                              return _vm.updateSubtotal()
+                            }
+                          },
+                          model: {
+                            value: _vm.wo.advance,
+                            callback: function($$v) {
+                              _vm.$set(_vm.wo, "advance", $$v)
+                            },
+                            expression: "wo.advance"
+                          }
+                        },
+                        "money",
+                        _vm.money,
+                        false
+                      )
+                    )
+                  ],
+                  1
+                )
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-control-label",
-                      attrs: { for: "toPay" }
-                    },
-                    [_vm._v("Por Pagar:")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.wo.toPay,
-                        expression: "wo.toPay"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", id: "toPay", readonly: "" },
-                    domProps: { value: _vm.wo.toPay },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.wo, "toPay", $event.target.value)
-                      }
-                    }
-                  })
-                ])
+                        staticClass: "form-control-label",
+                        attrs: { for: "toPay" }
+                      },
+                      [_vm._v("Por Pagar:")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "money",
+                      _vm._b(
+                        {
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "toPay", readonly: "" },
+                          model: {
+                            value: _vm.wo.toPay,
+                            callback: function($$v) {
+                              _vm.$set(_vm.wo, "toPay", $$v)
+                            },
+                            expression: "wo.toPay"
+                          }
+                        },
+                        "money",
+                        _vm.money,
+                        false
+                      )
+                    )
+                  ],
+                  1
+                )
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-control-label",
-                      attrs: { for: "subtotal" }
-                    },
-                    [_vm._v("Subtotal:")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.wo.subtotal,
-                        expression: "wo.subtotal"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", id: "subtotal", readonly: "" },
-                    domProps: { value: _vm.wo.subtotal },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.wo, "subtotal", $event.target.value)
-                      }
-                    }
-                  })
-                ])
+                        staticClass: "form-control-label",
+                        attrs: { for: "subtotal" }
+                      },
+                      [_vm._v("Subtotal:")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "money",
+                      _vm._b(
+                        {
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "subtotal", readonly: "" },
+                          model: {
+                            value: _vm.wo.subtotal,
+                            callback: function($$v) {
+                              _vm.$set(_vm.wo, "subtotal", $$v)
+                            },
+                            expression: "wo.subtotal"
+                          }
+                        },
+                        "money",
+                        _vm.money,
+                        false
+                      )
+                    )
+                  ],
+                  1
+                )
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-control-label",
-                      attrs: { for: "iva" }
-                    },
-                    [_vm._v("I.V.A.:")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.wo.iva,
-                        expression: "wo.iva"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", id: "iva", readonly: "" },
-                    domProps: { value: _vm.wo.iva },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.wo, "iva", $event.target.value)
-                      }
-                    }
-                  })
-                ])
+                        staticClass: "form-control-label",
+                        attrs: { for: "iva" }
+                      },
+                      [_vm._v("I.V.A.:")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "money",
+                      _vm._b(
+                        {
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "iva", readonly: "" },
+                          model: {
+                            value: _vm.wo.iva,
+                            callback: function($$v) {
+                              _vm.$set(_vm.wo, "iva", $$v)
+                            },
+                            expression: "wo.iva"
+                          }
+                        },
+                        "money",
+                        _vm.money,
+                        false
+                      )
+                    )
+                  ],
+                  1
+                )
               ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "offset-9 col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-control-label",
-                      attrs: { for: "total" }
-                    },
-                    [_vm._v("Total:")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.wo.total,
-                        expression: "wo.total"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", id: "total", readonly: "" },
-                    domProps: { value: _vm.wo.total },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.wo, "total", $event.target.value)
-                      }
-                    }
-                  })
-                ])
+                        staticClass: "form-control-label",
+                        attrs: { for: "total" }
+                      },
+                      [_vm._v("Total:")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "money",
+                      _vm._b(
+                        {
+                          staticClass: "form-control",
+                          attrs: { type: "text", id: "total", readonly: "" },
+                          model: {
+                            value: _vm.wo.total,
+                            callback: function($$v) {
+                              _vm.$set(_vm.wo, "total", $$v)
+                            },
+                            expression: "wo.total"
+                          }
+                        },
+                        "money",
+                        _vm.money,
+                        false
+                      )
+                    )
+                  ],
+                  1
+                )
               ])
             ])
           ])
@@ -98060,9 +98162,11 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(d.description))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(d.price))]),
+                      _c("td", [_vm._v(_vm._s("$ " + _vm.addCommas(d.price)))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(d.machine))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(d.status))]),
                       _vm._v(" "),
                       _c("td", [
                         _c("i", {
@@ -98234,6 +98338,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Precio")]),
         _vm._v(" "),
         _c("th", [_vm._v("Equipo")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Estatus")]),
         _vm._v(" "),
         _c("th", [_vm._v("Acciones")])
       ])
@@ -118087,8 +118193,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuejs_datepicker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js");
 /* harmony import */ var vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuejs-datepicker/dist/locale */ "./node_modules/vuejs-datepicker/dist/locale/index.js");
 /* harmony import */ var vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var vuejs_model_validator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuejs-model-validator */ "./node_modules/vuejs-model-validator/dist/vuejs-model-validator.umd.min.js");
-/* harmony import */ var vuejs_model_validator__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(vuejs_model_validator__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! v-money */ "./node_modules/v-money/dist/v-money.js");
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(v_money__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var vuejs_model_validator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vuejs-model-validator */ "./node_modules/vuejs-model-validator/dist/vuejs-model-validator.umd.min.js");
+/* harmony import */ var vuejs_model_validator__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(vuejs_model_validator__WEBPACK_IMPORTED_MODULE_12__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -118141,7 +118249,10 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('multiselect', vue_multisel
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('datepicker', vuejs_datepicker__WEBPACK_IMPORTED_MODULE_9__["default"]);
+ // CURRENCY
 
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(v_money__WEBPACK_IMPORTED_MODULE_11___default.a);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -118179,7 +118290,7 @@ window.Fire = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
 window.csrf_token = $('meta[name="csrf-token"]').attr('content');
 window.VRuntimeTemplate = v_runtime_template__WEBPACK_IMPORTED_MODULE_5__["default"];
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin(vuejs_model_validator__WEBPACK_IMPORTED_MODULE_11___default.a);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin(vuejs_model_validator__WEBPACK_IMPORTED_MODULE_12___default.a);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });

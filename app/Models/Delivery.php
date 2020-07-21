@@ -11,7 +11,9 @@ class Delivery extends Model
         'wo_id',
         'wodetail_id',
         'user_id',
-        'delivery_date'];
+        'delivery_date',
+        'notes'
+    ];
 
     public function production(){
         return $this->hasMany(\App\Models\Production::class);

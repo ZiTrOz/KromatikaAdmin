@@ -118,6 +118,7 @@
                     <div class="row">
                         
                     </div>
+                    <hr/>
                     <div class="row align-items-center">
                         <div class="col-lg-12 col-12 text-right">
                             <button href="#" class="btn btn-sm btn-neutral" @click="addRow()">Nuevo Producto</button>
@@ -126,7 +127,7 @@
                     </div>
                     <br/>
                     <div class="row">
-                        <div class="" >
+                        <div class="col-12" >
                             <table class="table table-flush needs-validation" id="datatable-basic">
                                 <thead class="thead-light">
                                     <tr>
@@ -140,7 +141,8 @@
                                 <tbody>
                                     <tr v-for="(prod, index) in wo.wodetail" v-bind:key="index">
                                         <td>
-                                            <input type="number" class="form-control" placeholder="Cantidad" v-model="prod.quantity" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Cantidad" :id="'qty' + index" :name="'qty' + index" 
+                                            <input type="hidden" v-model="prod.id"/>
+                                            <input type="number" min="0" class="form-control" placeholder="Cantidad" v-model="prod.quantity" @change="updateSubtotal()" v-validate="'required|min_value:1'" data-vv-as="Cantidad" :id="'qty' + index" :name="'qty' + index" 
                                                 :class="{ 'is-invalid': submitted && errors.has('qty' + index) }" />
                                             <div v-if="submitted && errors.has('qty' + index)" class="invalid-feedback">
                                                 {{ errors.first("qty" + index) }}
@@ -154,7 +156,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" placeholder="Precio" v-model="prod.price" @change="updateSubtotal()" v-validate="'required'" data-vv-as="Precio" :id="'price' + index" :name="'price' + index" 
+                                            <input type="number" min="0" class="form-control" placeholder="Precio" v-model="prod.price" @change="updateSubtotal()" v-validate="'required|min_value:1'" data-vv-as="Precio" :id="'price' + index" :name="'price' + index" 
                                                 :class="{ 'is-invalid': submitted && errors.has('price' + index) }" />
                                             <div v-if="submitted && errors.has('price' + index)" class="invalid-feedback">
                                                 {{ errors.first("price" + index) }}
@@ -181,25 +183,26 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="advance">Anticipo:</label>
-                                <input type="number" class="form-control" id="advance" v-model="wo.advance" @change="updateSubtotal()">
+                                <money v-bind="money" v-validate="'min_value:0'" data-vv-as="anticipo" class="form-control" id="advance" name="advance" v-model="wo.advance" @change.native="updateSubtotal()"/>
+                                
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="toPay">Por Pagar:</label>
-                                <input type="text" class="form-control" id="toPay" v-model="wo.toPay" readonly>
+                                <money v-bind="money" type="text" class="form-control" id="toPay" v-model="wo.toPay" readonly/>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="subtotal">Subtotal:</label>
-                                <input type="text" class="form-control" id="subtotal" v-model="wo.subtotal" readonly>
+                                <money v-bind="money" type="text" class="form-control" id="subtotal" v-model="wo.subtotal" readonly/>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="iva">I.V.A.:</label>
-                                <input type="text" class="form-control" id="iva" v-model="wo.iva" readonly>
+                                <money v-bind="money" type="text" class="form-control" id="iva" v-model="wo.iva" readonly/>
                             </div>
                         </div>
                     </div>
@@ -207,7 +210,7 @@
                         <div class="offset-9 col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="total">Total:</label>
-                                <input type="text" class="form-control" id="total" v-model="wo.total" readonly>
+                                <money v-bind="money" type="text" class="form-control" id="total" v-model="wo.total" readonly/>
                             </div>
                         </div>
                     </div>
@@ -224,7 +227,7 @@
             to: new Date(2020, 6, 13), // Disable all dates up to specific date   
         }
     }
-    export default {		
+    export default {
         props: {
             title: '',
             id: ''
@@ -234,11 +237,11 @@
                 format: 'dd/MM/yyyy',
                 date: null,
 				wo: {
-					advance: '0.00',
-					toPay: '0.00',
-					subtotal: '0.00',
-					iva: '0.00',
-					total: '0.00',
+					advance: '0',
+					toPay: '0',
+					subtotal: '0',
+					iva: '0',
+					total: '0',
 					date: '',
 					wonumber: '',
 					folio: '',
@@ -274,7 +277,15 @@
                         to: new Date(), // Disable all dates up to specific date   
                     }
                 },
-                currentDate: null
+                currentDate: null,
+                money: {
+                    decimal: '.',
+                    thousands: ',',
+                    prefix: '$ ',
+                    suffix: '',
+                    precision: 2,
+                    masked: false /* doesn't work with directive */
+                }
             }            
     	},
     	methods: {
@@ -299,6 +310,8 @@
                     .then(response => {
                         this.wo = response.data;
                         this.wo.errors = [];
+
+                        this.date = new Date(this.wo.delivery_date);
                     })
             },            
     		save(){
@@ -320,26 +333,49 @@
                         this.showLoading();
     					this.wo.errors = [];
                         this.message = "";
-						axios.post('/api/wo', this.wo)
-						.then(response => {
-							this.wo = {
-                                errors: [],
-                                wodetail: []
-							}
-                            this.submitted = false;
-                            window.location.href = "/ordentrabajo";
-                            this.stopLoading();
-						}).catch(errors => {
-                            this.submitted = false;
-                            this.stopLoading();
-                             if(typeof errors.response.data === 'object')
-                                if(errors.response.data.errors != undefined)
-                                    this.wo.errors = _.flatten(_.toArray(errors.response.data.errors))
+                        
+                        // Actualizar orden
+                        if(this.wo.id > 0) {
+                            axios.put('/api/wo/' + this.wo.id, this.wo)
+                            .then(response => {
+                                this.submitted = false;
+                                // window.location.href = "/ordentrabajo";
+                                this.stopLoading();
+                                this.ShowModalMessage('Orden Actualizada', 4);
+                            }).catch(errors => {
+                                this.submitted = false;
+                                this.stopLoading();
+                                if(typeof errors.response.data === 'object')
+                                    if(errors.response.data.errors != undefined)
+                                        this.wo.errors = _.flatten(_.toArray(errors.response.data.errors))
+                                    else
+                                        this.wo.errors = ['Algo salio mal!']
                                 else
                                     this.wo.errors = ['Algo salio mal!']
-                            else
-                                this.wo.errors = ['Algo salio mal!']
                             })
+                        }
+                        //Crear orden
+                        else{
+                            axios.post('/api/wo', this.wo)
+                            .then(response => {
+                                this.wo = respinse.data;
+                                this.submitted = false;
+                                // window.location.href = "/ordentrabajo";
+                                this.stopLoading();
+                                this.ShowMessagePopup('Orden Creada, No. de Folio: ' + this.wo.folio, 4);
+                            }).catch(errors => {
+                                this.submitted = false;
+                                this.stopLoading();
+                                if(typeof errors.response.data === 'object')
+                                    if(errors.response.data.errors != undefined)
+                                        this.wo.errors = _.flatten(_.toArray(errors.response.data.errors))
+                                    else
+                                        this.wo.errors = ['Algo salio mal!']
+                                else
+                                    this.wo.errors = ['Algo salio mal!']
+                            })
+                        }
+						
     				}
     			});
 			},
@@ -350,23 +386,17 @@
 						subtotal += (parseFloat(item.price) * parseFloat(item.quantity));
 					}
 				});
-				this.wo.subtotal = this.addCommas(subtotal);
-				this.wo.iva = (subtotal * 1.16 - subtotal).toFixed(2);
-				this.wo.total = (subtotal * 1.16).toFixed(2);
+				this.wo.subtotal = subtotal;
+				this.wo.iva = (subtotal * 1.16 - subtotal);
+                this.wo.total = (subtotal * 1.16);
 				if(!isNaN(parseFloat(this.wo.advance)) && isFinite(this.wo.advance)){
-                    this.wo.toPay = ((subtotal * 1.16) - this.wo.advance).toFixed(2);
+                    if(this.wo.advance < 0){
+                        this.ShowMessagePopup('El anticipo debe ser mayor a zero', 2)
+                        this.wo.advance = 0;
+                    }
+                    else
+                        this.wo.toPay = ((subtotal * 1.16) - this.wo.advance);
                 }
-            },
-            addCommas(nStr) {
-                nStr += '';
-                var x = nStr.split('.');
-                var x1 = x[0];
-                var x2 = x.length > 1 ? '.' + x[1] : '';
-                var rgx = /(\d+)(\d{3})/;
-                while (rgx.test(x1)) {
-                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-                }
-                return x1 + x2;
             },
         },
     	mounted(){

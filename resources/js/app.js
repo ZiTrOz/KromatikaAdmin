@@ -56,6 +56,11 @@ import Datepicker from 'vuejs-datepicker';
 Vue.component('datepicker', Datepicker);
 import { esp } from 'vuejs-datepicker/dist/locale';
 
+// CURRENCY
+import money from 'v-money';
+
+Vue.use(money);
+
 
 
 /**

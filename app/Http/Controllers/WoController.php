@@ -122,6 +122,8 @@ class WoController extends Controller
                 ]);
             }
             DB::commit();
+
+            return $wo;
         
         } catch(\PDOException $e){
             DB::rollback();
@@ -161,7 +163,86 @@ class WoController extends Controller
      */
     public function update(Request $request, Wo $po)
     {
-        //
+        $data = $request->all();
+        $validator = Validator::make($data, [
+			'date' => 'required',
+            'customer' => 'required',
+            'phone' => 'required',
+            'delivery' => 'required',
+            'delivery_date' => 'required',
+        ])->setAttributeNames(
+            [
+                'wonumber' => 'Orden de Trabajo',
+                'date' => 'Fecha',
+                'customer' => 'Cliente',
+                'phone' => 'Teléfono',
+                'delivery' => 'Entrega',
+                'delivery_date' => 'Fecha de Entrega',
+            ], 
+        );
+
+        $validator->validate();
+
+        $woNumber = Wo::where('wonumber', $data['wonumber'])->where('id', '<>', $data['id'])->first();
+
+        if($woNumber){
+            return response()->json(['error' => 'Numero de orden de trabaja ya esta en uso'], 500);
+        }
+
+        DB::beginTransaction();
+        try{
+            $woDetail = $data['wodetail'];
+            $data['status'] = "Ingresada";
+            $data['delivery_date'] = Carbon::parse($data['delivery_date'])->format('y-m-d');
+            // dd($data);
+            $data['toPay'] = doubleval($data['toPay']);
+            $data['advance'] = doubleval($data['advance']);
+            $data['subtotal'] = doubleval($data['subtotal']);
+            $data['iva'] = doubleval($data['iva']);
+            $data['total'] = doubleval($data['total']);
+
+            $wo = Wo::find($data['id']);
+
+
+            $wo->delivery_date = $data['delivery_date'];
+            $wo->toPay = $data['toPay'];
+            $wo->advance = $data['advance'];
+            $wo->subtotal = $data['subtotal'];
+            $wo->iva = $data['iva'];
+            $wo->total = $data['total'];
+
+            $wo->save();
+            
+
+            foreach($woDetail as $prod){
+                $item = WoDetail::find($prod['id']);
+                if($item){
+                    $item->quantity = $prod['quantity'];
+                    $item->description = $prod['description'];
+                    $item->price = $prod['price'];
+                    $item->machine = $prod['machine'];
+                    $item->save();
+                }
+                else{
+                    WoDetail::create([
+                        'quantity' => $prod['quantity'],
+                        'description' => $prod['description'],
+                        'price'=> $prod['price'],
+                        'wo_id' => $wo->id,
+                        'machine' => $prod['machine']
+                    ]);
+                }
+                
+            }
+            DB::commit();
+
+            return Wo::find($data['id']);;
+        
+        } catch(\PDOException $e){
+            DB::rollback();
+            return response()->json(['error' => $e], 500);
+        }
+        return response()->json(['success' => 'OK'], 200);   
     }
 
     /**

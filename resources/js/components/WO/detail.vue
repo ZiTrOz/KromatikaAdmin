@@ -28,6 +28,7 @@
                                     <th>Descrición</th>
                                     <th>Precio</th>
                                     <th>Equipo</th>
+                                    <th>Estatus</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -35,8 +36,9 @@
                                 <tr v-for="(d, i) in wo.wodetail" :key="i">
                                     <td>{{ d.quantity }}</td>
                                     <td>{{ d.description }}</td>
-                                    <td>{{ d.price }}</td>
+                                    <td>{{ '$ ' + addCommas(d.price) }}</td>
                                     <td>{{ d.machine }}</td>
+                                    <td>{{ d.status }}</td>
                                     <td>
                                         <i class="fas fa-eye" title="Ver Producción" @click="viewProd(d)"></i>
                                     </td>
@@ -141,7 +143,18 @@
                         }   
                     });
                 });   
-            },            
+            },     
+            addCommas(nStr) {
+                nStr += '';
+                var x = nStr.split('.');
+                var x1 = x[0];
+                var x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+                return x1 + x2;
+            },     
         },
         created: function(){
             if(this.id > 0){
