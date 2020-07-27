@@ -99,7 +99,7 @@ class WoController extends Controller
         DB::beginTransaction();
         try{
             $woDetail = $data['wodetail'];
-            $data['status'] = "Ingresada";
+            $data['status'] = "Diseño";
             $data['delivery_date'] = Carbon::parse($data['delivery_date'])->format('y-m-d');
             // dd($data);
             $data['toPay'] = doubleval($data['toPay']);

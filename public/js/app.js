@@ -3487,7 +3487,7 @@ var state = {
           } //Crear orden
           else {
               axios.post('/api/wo', _this2.wo).then(function (response) {
-                _this2.wo = respinse.data;
+                _this2.wo = response.data;
                 _this2.submitted = false; // window.location.href = "/ordentrabajo";
 
                 _this2.stopLoading();
