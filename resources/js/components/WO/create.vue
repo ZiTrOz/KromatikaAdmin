@@ -358,7 +358,7 @@
                         else{
                             axios.post('/api/wo', this.wo)
                             .then(response => {
-                                this.wo = respinse.data;
+                                this.wo = response.data;
                                 this.submitted = false;
                                 // window.location.href = "/ordentrabajo";
                                 this.stopLoading();
