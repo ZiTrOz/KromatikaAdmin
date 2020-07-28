@@ -363,6 +363,7 @@
                                 // window.location.href = "/ordentrabajo";
                                 this.stopLoading();
                                 this.ShowMessagePopup('Orden Creada, No. de Folio: ' + this.wo.folio, 4);
+                                this.wo = [];
                             }).catch(errors => {
                                 this.submitted = false;
                                 this.stopLoading();

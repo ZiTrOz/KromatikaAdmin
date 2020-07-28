@@ -27,6 +27,8 @@ Route::resource('delivery', 'DeliveryController');
 Route::resource('locations', 'LocationController');
 Route::resource('transaction', 'TransactionController');
 Route::resource('inventory', 'InventoryController');
+Route::resource('item', 'ItemController');
+Route::resource('supplier', 'SupplierController');
 
 Route::post('delivery/firma/{id}', 'DeliveryController@saveFirma')->name('delivery');
 

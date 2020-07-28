@@ -56,3 +56,11 @@ Route::get('/encuesta/{id}', function ($id) {
 });
 
 Route::get('/usuarios', function () { return view('main')->with(['component' => 'users-index', 'title' => 'Usuarios', 'id' => 0]); });
+
+// Articulos
+Route::get('/articulos', function () { return view('main')->with(['component' => 'item-index', 'title' => 'Artículos', 'id' => 0]); });
+Route::get('/articulo/crear', function () { return view('main')->with(['component' => 'item-create', 'title' => 'Crear Artículo', 'id' => 0]); });
+Route::get('/articulo/editar/{id}', function ($id) { return view('main')->with(['component' => 'item-create', 'title' => 'Editar Artículo', 'id' => $id]); });
+
+// Articulos
+Route::get('/proveedores', function () { return view('main')->with(['component' => 'supplier-index', 'title' => 'Proveedores', 'id' => 0]); });

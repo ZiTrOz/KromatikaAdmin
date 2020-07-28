@@ -97,6 +97,13 @@ Vue.component('poll-component', require('./components/polls/poll.vue').default);
 //USUARIOS
 Vue.component('users-index', require('./components/users/index.vue').default);
 
+//Items
+Vue.component('item-index', require('./components/items/index.vue').default);
+Vue.component('item-create', require('./components/items/create.vue').default);
+
+//Proveecores
+Vue.component('supplier-index', require('./components/suppliers/index.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

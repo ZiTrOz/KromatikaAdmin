@@ -13,6 +13,11 @@
   <poll-component v-if="component == 'poll-component'" :title="title" :id="id"></poll-component>
 
   <users-index v-if="component == 'users-index'" :title="title" :id="id"></users-index>
+
+  <item-create v-if="component == 'item-create'" :title="title" :id="id"></item-create>
+  <item-index v-if="component == 'item-index'" :title="title"></item-index>
+
+  <supplier-index v-if="component == 'supplier-index'" :title="title"></supplier-index>
 </div>
 </template>
 <script>

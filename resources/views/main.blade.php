@@ -55,6 +55,34 @@
             <li class="nav-item">
               <a class="nav-link" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards">
                 <i class="fas fa-list-alt text-primary"></i>
+                <span class="nav-link-text">Catalogos</span>
+              </a>
+              <div class="collapse" id="navbar-dashboards">
+                <ul class="nav nav-sm flex-column">
+                  <li class="nav-item">
+                    <a href="/usuarios" class="nav-link">
+                      <span class="sidenav-mini-icon"> USU </span>
+                      <span class="sidenav-normal"> Usuarios </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/articulos" class="nav-link">
+                      <span class="sidenav-mini-icon"> ART </span>
+                      <span class="sidenav-normal"> Articulos </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/proveedores" class="nav-link">
+                      <span class="sidenav-mini-icon"> PROV </span>
+                      <span class="sidenav-normal"> Proveedores </span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>    
+            <li class="nav-item">
+              <a class="nav-link" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards">
+                <i class="fas fa-list-alt text-primary"></i>
                 <span class="nav-link-text">Orden de Trabajo</span>
               </a>
               <div class="collapse" id="navbar-dashboards">
@@ -73,13 +101,7 @@
                   </li>
                 </ul>
               </div>
-            </li>    
-            <li class="nav-item">
-              <a class="nav-link" href="/usuarios" role="button">
-                <i class="fas fa-user text-primary"></i>
-                <span class="nav-link-text">Usuarios</span>
-              </a>              
-            </li>    
+            </li>  
             <li class="nav-item">
               <a class="nav-link" href="#navbar-warehouse" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-warehouse">
                 <i class="fas fa-cubes text-primary"></i>
